@@ -55,12 +55,12 @@ type Application struct {
 		Latitude, Longitude float64
 	}
 
-	Entrance               *int   // 33 Может не присутствовать если проблема домовая?
-	Floor                  *int   // 34
-	Flat                   *int   // 35
-	OdsNumber              string // 36
-	ManagementCompanyTitle string // 37
-	ExecutionCompanyTitle  string // 38 есть идентификатор - 39, ИНН - 40
+	Entrance               *string // 33 Может не присутствовать если проблема домовая?
+	Floor                  *string // 34
+	Flat                   *string // 35
+	OdsNumber              string  // 36
+	ManagementCompanyTitle string  // 37
+	ExecutionCompanyTitle  string  // 38 есть идентификатор - 39, ИНН - 40
 	// 43 - 46 что это?
 	RenderedServicesIds         []int      // 48
 	ConsumedMaterials           string     // 49 Израсходованный материал. Аномально если израсходован там где не надо?
@@ -77,6 +77,9 @@ type Application struct {
 	Review         *string    // 62 Работы выполнены | Работы невыполнены
 	RatingCode     *string    // 63 // bad|neutral|good
 	// 64-67 Payment Fields
+
+	// service fields
+	IsAbnormal *bool
 }
 
 func NewApplicationFromRecord(record []string) (a Application, err error) {
@@ -162,25 +165,13 @@ func NewApplicationFromRecord(record []string) (a Application, err error) {
 	// TODO: GPS FIELD
 
 	if record[33] != "" {
-		entrance, err := strconv.Atoi(record[33])
-		if err != nil {
-			return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
-		}
-		a.Entrance = &entrance
+		a.Entrance = &record[33]
 	}
 	if record[34] != "" {
-		floor, err := strconv.Atoi(record[34])
-		if err != nil {
-			return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
-		}
-		a.Floor = &floor
+		a.Floor = &record[34]
 	}
 	if record[35] != "" {
-		flat, err := strconv.Atoi(record[35])
-		if err != nil {
-			return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
-		}
-		a.Flat = &flat
+		a.Flat = &record[35]
 	}
 
 	a.OdsNumber = record[36]
@@ -296,6 +287,7 @@ func (a Application) ToDto() dto.Application {
 		RatedAt:                     a.RatedAt,
 		Verdict:                     a.Review,
 		RatingCode:                  a.RatingCode,
+		IsAbnormal:                  a.IsAbnormal,
 	}
 }
 

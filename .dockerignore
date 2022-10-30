@@ -6,3 +6,4 @@ configs
 .env
 data
 *.exe
+assets/

@@ -33,9 +33,9 @@ type Application struct {
 	UNOM                        int64      `bun:"unom"`
 	Latitude                    float64    `bun:"latitude"`
 	Longitude                   float64    `bun:"longitude"`
-	Entrance                    *int       `bun:"entrance"`
-	Floor                       *int       `bun:"floor"`
-	Flat                        *int       `bun:"flat"`
+	Entrance                    *string    `bun:"entrance"`
+	Floor                       *string    `bun:"floor"`
+	Flat                        *string    `bun:"flat"`
 	OdsNumber                   string     `bun:"ods_number"`
 	ManagementCompanyTitle      string     `bun:"management_company_title"`
 	ExecutionCompanyTitle       string     `bun:"execution_company_title"`
@@ -52,6 +52,8 @@ type Application struct {
 	RatedAt                     *time.Time `bun:"rated_at"`
 	Review                      *string    `bun:"review"`
 	RatingCode                  *string    `bun:"rating_code"`
+
+	IsAbnormal *bool `bun:"is_abnormal"`
 }
 
 func NewApplication(application bo.Application) Application {
@@ -141,6 +143,7 @@ func (a Application) ToBo() (application bo.Application) {
 		RatedAt:                     a.RatedAt,
 		Review:                      a.Review,
 		RatingCode:                  a.RatingCode,
+		IsAbnormal:                  a.IsAbnormal,
 	}
 	return application
 }

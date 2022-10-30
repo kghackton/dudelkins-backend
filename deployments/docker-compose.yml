@@ -10,7 +10,7 @@ services:
     env_file:
       - ../.env
     volumes:
-      - "../cmd/3000.csv:/data/3000.csv"
+      - "../assets/applications.csv:/data/applications.csv"
     ports:
       - "10000:10000"
     networks:

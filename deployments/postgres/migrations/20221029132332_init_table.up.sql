@@ -22,9 +22,9 @@ CREATE TABLE IF NOT EXISTS applications
     unom                           INT4             NOT NULL,
     latitude                       DOUBLE PRECISION NOT NULL,
     longitude                      DOUBLE PRECISION NOT NULL,
-    entrance                       INT4             NULL,
-    floor                          INT4             NULL,
-    flat                           INT4             NULL,
+    entrance                       TEXT             NULL,
+    floor                          TEXT             NULL,
+    flat                           TEXT             NULL,
     ods_number                     TEXT             NOT NULL,
     management_company_title       TEXT             NOT NULL,
     execution_company_title        TEXT             NOT NULL,
@@ -40,5 +40,7 @@ CREATE TABLE IF NOT EXISTS applications
     preferable_to                  TIMESTAMPTZ      NULL,
     rated_at                       TIMESTAMPTZ      NULL,
     review                         TEXT             NULL,
-    rating_code                    TEXT             NULL
+    rating_code                    TEXT             NULL,
+
+    is_abnormal                    BOOL             NULL
 );

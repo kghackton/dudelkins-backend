@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/csv"
+	"io"
 	"net/http"
 	"os"
 
@@ -19,9 +20,27 @@ type ApplicationController struct {
 func (c *ApplicationController) Create(ctx echo.Context) (err error) {
 	var (
 		logFields = []interface{}{"path", ctx.Path(), "method", ctx.Request().Method}
+		request   struct {
+			RowsAmount int `json:"rowsAmount" validate:"gte=0"`
+		}
 	)
 
-	csvFile, err := os.Open("/data/3000.csv")
+	if err = ctx.Bind(&request); err != nil {
+		logger.Warnw(err.Error(), logFields...)
+		return ctx.JSON(http.StatusBadRequest, echo.Map{
+			"code": http.StatusBadRequest,
+			"msg":  err.Error(),
+		})
+	}
+	if err = ctx.Validate(request); err != nil {
+		logger.Warnw(err.Error(), logFields...)
+		return ctx.JSON(http.StatusBadRequest, echo.Map{
+			"code": http.StatusBadRequest,
+			"msg":  err.Error(),
+		})
+	}
+
+	csvFile, err := os.Open("/data/applications.csv")
 	if err != nil {
 		logger.Errorw(err.Error(), logFields...)
 		return ctx.JSON(http.StatusInternalServerError, echo.Map{
@@ -35,31 +54,44 @@ func (c *ApplicationController) Create(ctx echo.Context) (err error) {
 	csvReader.Comma = '$'
 	csvReader.ReuseRecord = true
 
-	records, err := csvReader.ReadAll()
-	if err != nil {
-		logger.Errorw(err.Error(), logFields...)
-		return ctx.JSON(http.StatusInternalServerError, echo.Map{
-			"code": http.StatusInternalServerError,
-			"msg":  err.Error(),
-		})
+	if request.RowsAmount == 0 {
+		request.RowsAmount = 300
 	}
+	for i := 0; i < request.RowsAmount; i++ {
+		record, err := csvReader.Read()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			logger.Errorw(err.Error(), logFields...)
+			return ctx.JSON(http.StatusInternalServerError, echo.Map{
+				"code": http.StatusInternalServerError,
+				"msg":  err.Error(),
+			})
+		}
+		if i == 0 {
+			continue
+		}
 
-	logger.Debugf("record: %+v", records[1])
+		application, err := bo.NewApplicationFromRecord(record)
+		if err != nil {
+			logger.Errorw(err.Error(), logFields...)
+			return ctx.JSON(http.StatusInternalServerError, echo.Map{
+				"code": http.StatusInternalServerError,
+				"msg":  err.Error(),
+			})
+		}
+		if err = c.ApplicationService.Create(ctx.Request().Context(), application); err != nil {
+			logger.Errorw(err.Error(), logFields...)
+			return ctx.JSON(http.StatusInternalServerError, echo.Map{
+				"code": http.StatusInternalServerError,
+				"msg":  err.Error(),
+			})
+		}
 
-	application, err := bo.NewApplicationFromRecord(records[1])
-	if err != nil {
-		logger.Errorw(err.Error(), logFields...)
-		return ctx.JSON(http.StatusInternalServerError, echo.Map{
-			"code": http.StatusInternalServerError,
-			"msg":  err.Error(),
-		})
-	}
-	if err = c.ApplicationService.Create(ctx.Request().Context(), application); err != nil {
-		logger.Errorw(err.Error(), logFields...)
-		return ctx.JSON(http.StatusInternalServerError, echo.Map{
-			"code": http.StatusInternalServerError,
-			"msg":  err.Error(),
-		})
+		if i%100 == 0 {
+			logger.Debugf("%d", i)
+		}
 	}
 
 	logger.Infow("", logFields...)

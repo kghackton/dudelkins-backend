@@ -20,6 +20,7 @@ func initRouter(k *infrastructure.Kernel, port string) (routerStartFunc func(wg 
 	}
 
 	registerRoutes(router, k)
+	registerValidation(router)
 
 	return func(wg *sync.WaitGroup) (err error) {
 		defer wg.Done()

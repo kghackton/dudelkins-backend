@@ -14,6 +14,7 @@ type ApplicationRepository struct{}
 func (r *ApplicationRepository) Insert(ctx context.Context, bun bun.IDB, application dao.Application) (err error) {
 	_, err = bun.NewInsert().
 		Model(&application).
+		On("CONFLICT (root_id) DO NOTHING").
 		Exec(ctx)
 	return errors.Wrap(err, "Insert")
 }

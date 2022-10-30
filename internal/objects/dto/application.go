@@ -23,9 +23,9 @@ type Application struct {
 	District                    string     `json:"district"`
 	Address                     string     `json:"address"`
 	UNOM                        int64      `json:"UNOM"`
-	Entrance                    *int       `json:"entrance"`
-	Floor                       *int       `json:"floor"`
-	Flat                        *int       `json:"flat"`
+	Entrance                    *string    `json:"entrance"`
+	Floor                       *string    `json:"floor"`
+	Flat                        *string    `json:"flat"`
 	OdsNumber                   string     `json:"odsNumber"`
 	ManagementCompanyTitle      string     `json:"managementCompanyTitle"`
 	ExecutionCompanyTitle       string     `json:"executionCompanyTitle"`
@@ -42,4 +42,6 @@ type Application struct {
 	RatedAt                     *time.Time `json:"ratedAt"`
 	Verdict                     *string    `json:"verdict"`
 	RatingCode                  *string    `json:"ratingCode"`
+
+	IsAbnormal *bool `json:"isAbnormal"`
 }
