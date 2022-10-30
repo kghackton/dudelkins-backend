@@ -42,5 +42,6 @@ CREATE TABLE IF NOT EXISTS applications
     review                         TEXT             NULL,
     rating_code                    TEXT             NULL,
 
-    is_abnormal                    BOOL             NULL
+    is_abnormal                    BOOL             NULL,
+    anomaly_classes                JSONB            NULL
 );

@@ -13,6 +13,7 @@ import (
 type ApplicationService struct {
 	Db interfaces.IDBHandler
 
+	AnomalityService      interfaces.IAnomalityService
 	ApplicationRepository interfaces.IApplicationRepository
 }
 
@@ -23,7 +24,13 @@ func (s *ApplicationService) Create(ctx context.Context, application bo.Applicat
 	}
 	defer conn.Close()
 
-	err = s.ApplicationRepository.Insert(ctx, conn, dao.NewApplication(application))
+	application.AnomalyClasses = s.AnomalityService.CheckForAnomalies(application)
+	applicationDao, err := dao.NewApplication(application)
+	if err != nil {
+		return errors.Wrap(err, "Create")
+	}
+
+	err = s.ApplicationRepository.Insert(ctx, conn, applicationDao)
 
 	return errors.Wrap(err, "Create")
 }
@@ -39,6 +46,10 @@ func (s *ApplicationService) Get(ctx context.Context, opts *bo.ApplicationRetrie
 	if err != nil {
 		return applications, errors.Wrap(err, "Get")
 	}
+	applications, err = applicationsDao.ToBo()
+	if err != nil {
+		return applications, errors.Wrap(err, "Get")
+	}
 
-	return applicationsDao.ToBo(), nil
+	return
 }

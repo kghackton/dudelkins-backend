@@ -1,8 +1,10 @@
 package dao
 
 import (
+	"encoding/json"
 	"time"
 
+	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
 
 	"dudelkins/internal/objects/bo"
@@ -53,11 +55,12 @@ type Application struct {
 	Review                      *string    `bun:"review"`
 	RatingCode                  *string    `bun:"rating_code"`
 
-	IsAbnormal *bool `bun:"is_abnormal"`
+	IsAbnormal     *bool           `bun:"is_abnormal"`
+	AnomalyClasses json.RawMessage `bun:"anomaly_classes,type:jsonb"`
 }
 
-func NewApplication(application bo.Application) Application {
-	return Application{
+func NewApplication(application bo.Application) (Application, error) {
+	a := Application{
 		RootId:                      application.RootId,
 		VersionId:                   application.VersionId,
 		Number:                      application.Number,
@@ -100,9 +103,17 @@ func NewApplication(application bo.Application) Application {
 		Review:                      application.Review,
 		RatingCode:                  application.RatingCode,
 	}
+
+	var err error
+	a.AnomalyClasses, err = json.Marshal(application.AnomalyClasses)
+	if err != nil {
+		return Application{}, errors.Wrap(err, "NewApplication")
+	}
+
+	return a, nil
 }
 
-func (a Application) ToBo() (application bo.Application) {
+func (a Application) ToBo() (application bo.Application, err error) {
 	application = bo.Application{
 		RootId:                      a.RootId,
 		VersionId:                   a.VersionId,
@@ -145,16 +156,25 @@ func (a Application) ToBo() (application bo.Application) {
 		RatingCode:                  a.RatingCode,
 		IsAbnormal:                  a.IsAbnormal,
 	}
-	return application
+
+	if err = json.Unmarshal(a.AnomalyClasses, &application.AnomalyClasses); err != nil {
+		return bo.Application{}, errors.Wrap(err, "ToBo")
+	}
+
+	return application, err
 }
 
 type Applications []Application
 
-func (a Applications) ToBo() (applications bo.Applications) {
+func (a Applications) ToBo() (applications bo.Applications, err error) {
 	applications = make(bo.Applications, 0, len(a))
 
 	for _, application := range a {
-		applications = append(applications, application.ToBo())
+		applicationBo, err := application.ToBo()
+		if err != nil {
+			return nil, errors.Wrap(err, "ToBo")
+		}
+		applications = append(applications, applicationBo)
 	}
 
 	return

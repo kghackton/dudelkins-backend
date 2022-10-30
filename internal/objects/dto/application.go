@@ -2,6 +2,11 @@ package dto
 
 import "time"
 
+type AnomalyClass struct {
+	Verdict     bool   `json:"verdict"`
+	Description string `json:"description,omitempty"`
+}
+
 type Application struct {
 	RootId                      int32      `json:"rootId"`
 	VersionId                   int32      `json:"versionId"`
@@ -43,5 +48,6 @@ type Application struct {
 	Verdict                     *string    `json:"verdict"`
 	RatingCode                  *string    `json:"ratingCode"`
 
-	IsAbnormal *bool `json:"isAbnormal"`
+	IsAbnormal     *bool                   `json:"isAbnormal"`
+	AnomalyClasses map[string]AnomalyClass `json:"anomalyClasses"`
 }

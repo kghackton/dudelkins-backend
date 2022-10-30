@@ -79,7 +79,8 @@ type Application struct {
 	// 64-67 Payment Fields
 
 	// service fields
-	IsAbnormal *bool
+	IsAbnormal     *bool
+	AnomalyClasses map[string]AnomalyClass
 }
 
 func NewApplicationFromRecord(record []string) (a Application, err error) {
@@ -247,7 +248,7 @@ func NewApplicationFromRecord(record []string) (a Application, err error) {
 }
 
 func (a Application) ToDto() dto.Application {
-	return dto.Application{
+	application := dto.Application{
 		RootId:                      a.RootId,
 		VersionId:                   a.VersionId,
 		Number:                      a.Number,
@@ -289,6 +290,13 @@ func (a Application) ToDto() dto.Application {
 		RatingCode:                  a.RatingCode,
 		IsAbnormal:                  a.IsAbnormal,
 	}
+
+	application.AnomalyClasses = make(map[string]dto.AnomalyClass, len(a.AnomalyClasses))
+	for className, class := range a.AnomalyClasses {
+		application.AnomalyClasses[className] = dto.AnomalyClass{Description: class.Description, Verdict: class.Verdict}
+	}
+
+	return application
 }
 
 type Applications []Application
