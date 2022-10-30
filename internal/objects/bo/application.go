@@ -1,6 +1,12 @@
 package bo
 
-import "time"
+import (
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/pkg/errors"
+)
 
 // indexes of columns in comment
 
@@ -48,8 +54,200 @@ type Application struct {
 	ClosedAt       time.Time  // 58
 	PreferableFrom *time.Time // 59
 	PreferableTo   *time.Time // 60
-	RatedAt        time.Time  // 61
-	Review         string     // 62 Работы выполнены | Работы невыполнены
-	RatingCode     string     // 63 // bad|neutral|good
+	RatedAt        *time.Time // 61
+	Review         *string    // 62 Работы выполнены | Работы невыполнены
+	RatingCode     *string    // 63 // bad|neutral|good
 	// 64-67 Payment Fields
+}
+
+func NewApplicationFromRecord(record []string) (a Application, err error) {
+	timeLayoutWithNoT := "2006-01-02 15:04:05-07"
+
+	rootId, err := strconv.Atoi(record[0])
+	if err != nil {
+		return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
+	}
+	a.RootId = int32(rootId)
+
+	versionId, err := strconv.Atoi(record[1])
+	if err != nil {
+		return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
+	}
+	a.VersionId = int32(versionId)
+
+	a.Number = record[2]
+
+	a.CreatedAt, err = time.Parse(timeLayoutWithNoT, record[4])
+	if err != nil {
+		return Application{}, errors.Wrap(err, "NewApplicationFromRecord 4")
+	}
+
+	a.VersionStartedAt, err = time.Parse(timeLayoutWithNoT, record[5])
+	if err != nil {
+		return Application{}, errors.Wrap(err, "NewApplicationFromRecord 5")
+	}
+
+	switch strings.ToLower(record[9]) {
+	case "да":
+		a.IsIncident = true
+	case "нет":
+		a.IsIncident = false
+	default:
+		return Application{}, errors.Wrap(errors.Errorf("incorrect IsIncident field: %s", record[9]), "NewApplicationFromRecord")
+	}
+
+	if record[10] != "" {
+		parentRootId, err := strconv.Atoi(record[10])
+		if err != nil {
+			return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
+		}
+		parentRootId32 := int32(parentRootId)
+		a.ParentRootId = &parentRootId32
+	}
+
+	a.UserLastEdited = record[12]
+	a.UserLastEditedOrganization = record[13]
+	a.Comment = record[14]
+
+	a.CategoryId, err = strconv.Atoi(record[16])
+	if err != nil {
+		return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
+	}
+	a.DefectId, err = strconv.Atoi(record[20])
+	if err != nil {
+		return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
+	}
+
+	switch strings.ToLower(record[22]) {
+	case "да":
+		a.IsDefectReturnable = true
+	case "нет":
+		a.IsDefectReturnable = false
+	default:
+		return Application{}, errors.Wrap(errors.Errorf("incorrect IsDefectReturnable field: %s", record[22]), "NewApplicationFromRecord")
+	}
+
+	a.ApplicantDescription = record[23]
+	a.ApplicantQuestion = record[24]
+	a.EmergencyType = record[26]
+	a.Region = record[27]
+	a.District = record[29]
+	a.Address = record[31]
+
+	a.UNOM, err = strconv.Atoi(record[32])
+	if err != nil {
+		return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
+	}
+
+	// TODO: GPS FIELD
+
+	if record[33] != "" {
+		entrance, err := strconv.Atoi(record[33])
+		if err != nil {
+			return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
+		}
+		a.Entrance = &entrance
+	}
+	if record[34] != "" {
+		floor, err := strconv.Atoi(record[34])
+		if err != nil {
+			return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
+		}
+		a.Floor = &floor
+	}
+	if record[35] != "" {
+		flat, err := strconv.Atoi(record[35])
+		if err != nil {
+			return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
+		}
+		a.Flat = &flat
+	}
+
+	a.OdsNumber = record[36]
+	a.ManagementCompanyTitle = record[37]
+	a.ExecutionCompanyTitle = record[38]
+
+	a.RenderedServicesIds, err = convertStringToIntArray(record[48])
+	a.RenderedSecurityServicesIds, err = convertStringToIntArray(record[51])
+
+	a.ConsumedMaterials = record[49]
+	a.ResultCode = record[53]
+
+	if record[54] != "" {
+		amountOfReturnings, err := strconv.Atoi(record[54])
+		if err != nil {
+			return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
+		}
+		a.AmountOfReturnings = &amountOfReturnings
+	}
+
+	if record[55] != "" {
+		lastReturnedAt, err := time.Parse(timeLayoutWithNoT, record[55])
+		if err != nil {
+			return Application{}, errors.Wrap(err, "NewApplicationFromRecord 55")
+		}
+		a.LastReturnedAt = &lastReturnedAt
+	}
+
+	switch strings.ToLower(record[57]) {
+	case "да":
+		a.IsAlarmed = true
+	case "нет":
+		a.IsAlarmed = false
+	default:
+		return Application{}, errors.Wrap(errors.Errorf("incorrect IsAlarmed field: %s", record[57]), "NewApplicationFromRecord")
+	}
+
+	a.ClosedAt, err = time.Parse(timeLayoutWithNoT, record[58])
+	if err != nil {
+		return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
+	}
+	if record[59] != "" {
+		preferableFrom, err := time.Parse(timeLayoutWithNoT, record[59])
+		if err != nil {
+			return Application{}, errors.Wrap(err, "NewApplicationFromRecord 59")
+		}
+		a.PreferableFrom = &preferableFrom
+	}
+	if record[60] != "" {
+		preferableTo, err := time.Parse(timeLayoutWithNoT, record[60])
+		if err != nil {
+			return Application{}, errors.Wrap(err, "NewApplicationFromRecord 60")
+		}
+		a.PreferableTo = &preferableTo
+	}
+	if record[61] != "" {
+		ratedAt, err := time.Parse(timeLayoutWithNoT, record[61])
+		if err != nil {
+			return Application{}, errors.Wrap(errors.Errorf("record[61]: %s err: %s", record[61], err), "NewApplicationFromRecord 61")
+		}
+		a.RatedAt = &ratedAt
+	}
+
+	if record[62] != "" {
+		a.Review = &record[62]
+	}
+	if record[63] != "" {
+		a.RatingCode = &record[63]
+	}
+
+	return
+
+}
+
+func convertStringToIntArray(str string) (array []int, err error) {
+	array = make([]int, 0, 0)
+	if str == "" {
+		return array, nil
+	}
+
+	stringSplitted := strings.Split(str, ",")
+	for _, part := range stringSplitted {
+		number, err := strconv.Atoi(part)
+		if err != nil {
+			return nil, err
+		}
+		array = append(array, number)
+	}
+	return
 }

@@ -1,0 +1,8 @@
+*.md
+.idea
+.git
+.gitignore
+configs
+.env
+data
+*.exe

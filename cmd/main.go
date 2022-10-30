@@ -2,14 +2,15 @@ package main
 
 import (
 	"context"
-	"dudelkins/infrastructure"
-	"dudelkins/internal/environment"
-	"dudelkins/pkg/logger"
 	"net/http"
 	"os"
 	"os/signal"
 	"sync"
 	"time"
+
+	"dudelkins/infrastructure"
+	"dudelkins/internal/environment"
+	"dudelkins/pkg/logger"
 )
 
 var (
@@ -45,7 +46,7 @@ func main() {
 	defer cancelFunc()
 
 	// TODO: move port to cfg
-	routerStartFunc := initRouter(kernel, "18754")
+	routerStartFunc := initRouter(kernel, "10000")
 	wg.Add(1)
 	if err := routerStartFunc(&wg); err != nil {
 		if err != http.ErrServerClosed {

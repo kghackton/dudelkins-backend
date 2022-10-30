@@ -2,12 +2,15 @@ package infrastructure
 
 import (
 	"context"
+
+	"dudelkins/internal/controllers"
 	"dudelkins/internal/environment"
 
 	"github.com/pkg/errors"
 )
 
 type IInjector interface {
+	InjectApplicationController() *controllers.ApplicationController
 }
 
 type Kernel struct {
@@ -27,4 +30,8 @@ func Inject(ctx context.Context, env environment.Environment) (k *Kernel, err er
 	k.DbHandler = postgresDatabaseClient
 
 	return
+}
+
+func (k *Kernel) InjectApplicationController() *controllers.ApplicationController {
+	return &controllers.ApplicationController{ApplicationService: k.InjectApplicationService()}
 }

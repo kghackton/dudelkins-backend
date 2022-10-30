@@ -1,9 +1,10 @@
 package main
 
 import (
+	"sync"
+
 	"dudelkins/infrastructure"
 	"dudelkins/pkg/logger"
-	"sync"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -32,5 +33,13 @@ func initRouter(k *infrastructure.Kernel, port string) (routerStartFunc func(wg 
 }
 
 func registerRoutes(router *echo.Echo, injector infrastructure.IInjector) {
+	applicationController := injector.InjectApplicationController()
 
+	api := router.Group("/api")
+	{
+		applications := api.Group("/applications")
+		{
+			applications.POST("", applicationController.Create)
+		}
+	}
 }
