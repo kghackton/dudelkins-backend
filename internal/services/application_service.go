@@ -28,14 +28,14 @@ func (s *ApplicationService) Create(ctx context.Context, application bo.Applicat
 	return errors.Wrap(err, "Create")
 }
 
-func (s *ApplicationService) Get(ctx context.Context) (applications bo.Applications, err error) {
+func (s *ApplicationService) Get(ctx context.Context, opts *bo.ApplicationRetrieveOpts) (applications bo.Applications, err error) {
 	conn, err := s.Db.AcquireConn(ctx)
 	if err != nil {
 		return applications, errors.Wrap(err, "Get")
 	}
 	defer conn.Close()
 
-	applicationsDao, err := s.ApplicationRepository.Select(ctx, conn)
+	applicationsDao, err := s.ApplicationRepository.Select(ctx, conn, opts.QueryBuilderFuncs(), opts.SelectOpts())
 	if err != nil {
 		return applications, errors.Wrap(err, "Get")
 	}

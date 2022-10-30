@@ -10,6 +10,7 @@ import (
 
 	"dudelkins/internal/interfaces"
 	"dudelkins/internal/objects/bo"
+	"dudelkins/internal/objects/dto"
 	"dudelkins/pkg/logger"
 )
 
@@ -104,9 +105,36 @@ func (c *ApplicationController) Create(ctx echo.Context) (err error) {
 func (c *ApplicationController) Get(ctx echo.Context) (err error) {
 	var (
 		logFields = []interface{}{"path", ctx.Path(), "method", ctx.Request().Method}
+		request   dto.ApplicationRetrieveOpts
 	)
 
-	applications, err := c.ApplicationService.Get(ctx.Request().Context())
+	if err = ctx.Bind(&request); err != nil {
+		logger.Warnw(err.Error(), logFields...)
+		return ctx.JSON(http.StatusBadRequest, echo.Map{
+			"code": http.StatusBadRequest,
+			"msg":  err.Error(),
+		})
+	}
+	if err = ctx.Validate(request); err != nil {
+		logger.Warnw(err.Error(), logFields...)
+		return ctx.JSON(http.StatusBadRequest, echo.Map{
+			"code": http.StatusBadRequest,
+			"msg":  err.Error(),
+		})
+	}
+
+	applications, err := c.ApplicationService.Get(ctx.Request().Context(), &bo.ApplicationRetrieveOpts{
+		ClosedFrom:  request.ClosedFrom,
+		ClosedTo:    request.ClosedTo,
+		IsAbnormal:  request.IsAbnormal,
+		CategoryIds: request.CategoryIds,
+		DefectIds:   request.DefectIds,
+		Region:      request.Region,
+		District:    request.District,
+		UNOM:        request.UNOM,
+		Limit:       request.Limit,
+		Offset:      request.Offset,
+	})
 	if err != nil {
 		logger.Errorw(err.Error(), logFields...)
 		return ctx.JSON(http.StatusInternalServerError, echo.Map{
