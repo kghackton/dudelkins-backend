@@ -27,7 +27,7 @@ func NewFastCloseAnomalyCheck() FastCloseAnomalyCheck {
 }
 
 func (c FastCloseAnomalyCheck) CheckApplication(application Application) (isAbnormal bool, class string, description string) {
-	if application.ResultCode == consts.ResultCodeResolved {
+	if application.ResultCode == consts.ResultCodeResolved && application.AmountOfReturnings == nil {
 		if subDuration := application.ClosedAt.Sub(application.CreatedAt); subDuration < time.Minute*10 {
 			if !utils.OneOf(application.CategoryId, c.ListOfCategoryIdsThatCanBeClosedFast) {
 				return true, c.Class, fmt.Sprintf("closed too fast. categoryId: %d closed for: %s", application.CategoryId, subDuration)
