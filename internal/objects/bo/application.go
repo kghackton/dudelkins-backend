@@ -6,7 +6,26 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+
+	"dudelkins/internal/objects/dto"
 )
+
+func convertStringToIntArray(str string) (array []int, err error) {
+	array = make([]int, 0, 0)
+	if str == "" {
+		return array, nil
+	}
+
+	stringSplitted := strings.Split(str, ",")
+	for _, part := range stringSplitted {
+		number, err := strconv.Atoi(part)
+		if err != nil {
+			return nil, err
+		}
+		array = append(array, number)
+	}
+	return
+}
 
 // indexes of columns in comment
 
@@ -30,7 +49,7 @@ type Application struct {
 	Region                     string    // 27 ЗАО, ЮВАО... Можно юзать код из 28
 	District                   string    // 29 Можно юзать код из 30
 	Address                    string    // 31
-	UNOM                       int       //32
+	UNOM                       int64     //32
 
 	GPS struct {
 		Latitude, Longitude float64
@@ -134,10 +153,11 @@ func NewApplicationFromRecord(record []string) (a Application, err error) {
 	a.District = record[29]
 	a.Address = record[31]
 
-	a.UNOM, err = strconv.Atoi(record[32])
+	unom, err := strconv.Atoi(record[32])
 	if err != nil {
 		return Application{}, errors.Wrap(err, "NewApplicationFromRecord")
 	}
+	a.UNOM = int64(unom)
 
 	// TODO: GPS FIELD
 
@@ -235,19 +255,58 @@ func NewApplicationFromRecord(record []string) (a Application, err error) {
 
 }
 
-func convertStringToIntArray(str string) (array []int, err error) {
-	array = make([]int, 0, 0)
-	if str == "" {
-		return array, nil
+func (a Application) ToDto() dto.Application {
+	return dto.Application{
+		RootId:                      a.RootId,
+		VersionId:                   a.VersionId,
+		Number:                      a.Number,
+		CreatedAt:                   a.CreatedAt,
+		VersionStartedAt:            a.VersionStartedAt,
+		IsIncident:                  a.IsIncident,
+		ParentRootId:                a.ParentRootId,
+		UserLastEdited:              a.UserLastEdited,
+		UserLastEditedOrganization:  a.UserLastEditedOrganization,
+		Comment:                     a.Comment,
+		CategoryId:                  a.CategoryId,
+		DefectId:                    a.DefectId,
+		IsDefectReturnable:          a.IsDefectReturnable,
+		ApplicantDescription:        a.ApplicantDescription,
+		ApplicantQuestion:           a.ApplicantQuestion,
+		EmergencyType:               a.EmergencyType,
+		Region:                      a.Region,
+		District:                    a.District,
+		Address:                     a.Address,
+		UNOM:                        a.UNOM,
+		Entrance:                    a.Entrance,
+		Floor:                       a.Floor,
+		Flat:                        a.Flat,
+		OdsNumber:                   a.OdsNumber,
+		ManagementCompanyTitle:      a.ManagementCompanyTitle,
+		ExecutionCompanyTitle:       a.ExecutionCompanyTitle,
+		RenderedServicesIds:         a.RenderedServicesIds,
+		ConsumedMaterials:           a.ConsumedMaterials,
+		RenderedSecurityServicesIds: a.RenderedSecurityServicesIds,
+		ResultCode:                  a.ResultCode,
+		AmountOfReturnings:          a.AmountOfReturnings,
+		LastReturnedAt:              a.LastReturnedAt,
+		IsAlarmed:                   a.IsAlarmed,
+		ClosedAt:                    a.ClosedAt,
+		PreferableFrom:              a.PreferableFrom,
+		PreferableTo:                a.PreferableTo,
+		RatedAt:                     a.RatedAt,
+		Verdict:                     a.Review,
+		RatingCode:                  a.RatingCode,
+	}
+}
+
+type Applications []Application
+
+func (a Applications) ToDto() (applications []dto.Application) {
+	applications = make([]dto.Application, 0, len(a))
+
+	for _, application := range a {
+		applications = append(applications, application.ToDto())
 	}
 
-	stringSplitted := strings.Split(str, ",")
-	for _, part := range stringSplitted {
-		number, err := strconv.Atoi(part)
-		if err != nil {
-			return nil, err
-		}
-		array = append(array, number)
-	}
 	return
 }

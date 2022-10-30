@@ -68,3 +68,25 @@ func (c *ApplicationController) Create(ctx echo.Context) (err error) {
 		"code": http.StatusOK,
 	})
 }
+
+func (c *ApplicationController) Get(ctx echo.Context) (err error) {
+	var (
+		logFields = []interface{}{"path", ctx.Path(), "method", ctx.Request().Method}
+	)
+
+	applications, err := c.ApplicationService.Get(ctx.Request().Context())
+	if err != nil {
+		logger.Errorw(err.Error(), logFields...)
+		return ctx.JSON(http.StatusInternalServerError, echo.Map{
+			"code": http.StatusInternalServerError,
+			"msg":  err.Error(),
+		})
+	}
+
+	logger.Infow("", logFields...)
+
+	return ctx.JSON(http.StatusOK, echo.Map{
+		"code": http.StatusOK,
+		"data": applications.ToDto(),
+	})
+}

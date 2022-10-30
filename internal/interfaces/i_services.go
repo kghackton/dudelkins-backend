@@ -8,4 +8,5 @@ import (
 
 type IApplicationService interface {
 	Create(ctx context.Context, application bo.Application) (err error)
+	Get(ctx context.Context) (applications bo.Applications, err error)
 }

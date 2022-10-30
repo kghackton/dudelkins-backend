@@ -40,6 +40,7 @@ func registerRoutes(router *echo.Echo, injector infrastructure.IInjector) {
 		applications := api.Group("/applications")
 		{
 			applications.POST("", applicationController.Create)
+			applications.GET("", applicationController.Get)
 		}
 	}
 }

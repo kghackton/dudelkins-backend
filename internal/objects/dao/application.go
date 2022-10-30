@@ -30,7 +30,7 @@ type Application struct {
 	Region                      string     `bun:"region"`
 	District                    string     `bun:"district"`
 	Address                     string     `bun:"address"`
-	UNOM                        int        `bun:"unom"`
+	UNOM                        int64      `bun:"unom"`
 	Latitude                    float64    `bun:"latitude"`
 	Longitude                   float64    `bun:"longitude"`
 	Entrance                    *int       `bun:"entrance"`
@@ -98,4 +98,61 @@ func NewApplication(application bo.Application) Application {
 		Review:                      application.Review,
 		RatingCode:                  application.RatingCode,
 	}
+}
+
+func (a Application) ToBo() (application bo.Application) {
+	application = bo.Application{
+		RootId:                      a.RootId,
+		VersionId:                   a.VersionId,
+		Number:                      a.Number,
+		CreatedAt:                   a.CreatedAt,
+		VersionStartedAt:            a.VersionStartedAt,
+		IsIncident:                  a.IsIncident,
+		ParentRootId:                a.ParentRootId,
+		UserLastEdited:              a.UserLastEdited,
+		UserLastEditedOrganization:  a.UserLastEditedOrganization,
+		Comment:                     a.Comment,
+		CategoryId:                  a.CategoryId,
+		DefectId:                    a.DefectId,
+		IsDefectReturnable:          a.IsDefectReturnable,
+		ApplicantDescription:        a.ApplicantDescription,
+		ApplicantQuestion:           a.ApplicantQuestion,
+		EmergencyType:               a.EmergencyType,
+		Region:                      a.Region,
+		District:                    a.District,
+		Address:                     a.Address,
+		UNOM:                        a.UNOM,
+		Entrance:                    a.Entrance,
+		Floor:                       a.Floor,
+		Flat:                        a.Flat,
+		OdsNumber:                   a.OdsNumber,
+		ManagementCompanyTitle:      a.ManagementCompanyTitle,
+		ExecutionCompanyTitle:       a.ExecutionCompanyTitle,
+		RenderedServicesIds:         a.RenderedServicesIds,
+		ConsumedMaterials:           a.ConsumedMaterials,
+		RenderedSecurityServicesIds: a.RenderedSecurityServicesIds,
+		ResultCode:                  a.ResultCode,
+		AmountOfReturnings:          a.AmountOfReturnings,
+		LastReturnedAt:              a.LastReturnedAt,
+		IsAlarmed:                   a.IsAlarmed,
+		ClosedAt:                    a.ClosedAt,
+		PreferableFrom:              a.PreferableFrom,
+		PreferableTo:                a.PreferableTo,
+		RatedAt:                     a.RatedAt,
+		Review:                      a.Review,
+		RatingCode:                  a.RatingCode,
+	}
+	return application
+}
+
+type Applications []Application
+
+func (a Applications) ToBo() (applications bo.Applications) {
+	applications = make(bo.Applications, 0, len(a))
+
+	for _, application := range a {
+		applications = append(applications, application.ToBo())
+	}
+
+	return
 }
