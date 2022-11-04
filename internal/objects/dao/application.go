@@ -33,8 +33,6 @@ type Application struct {
 	District                    string     `bun:"district"`
 	Address                     string     `bun:"address"`
 	UNOM                        int64      `bun:"unom"`
-	Latitude                    float64    `bun:"latitude"`
-	Longitude                   float64    `bun:"longitude"`
 	Entrance                    *string    `bun:"entrance"`
 	Floor                       *string    `bun:"floor"`
 	Flat                        *string    `bun:"flat"`
@@ -83,8 +81,6 @@ func NewApplication(application bo.Application) (Application, error) {
 		District:                    application.District,
 		Address:                     application.Address,
 		UNOM:                        application.UNOM,
-		Latitude:                    application.GPS.Latitude,
-		Longitude:                   application.GPS.Longitude,
 		Entrance:                    application.Entrance,
 		Floor:                       application.Floor,
 		Flat:                        application.Flat,

@@ -20,8 +20,6 @@ CREATE TABLE IF NOT EXISTS applications
     district                       TEXT             NOT NULL,
     address                        TEXT             NOT NULL,
     unom                           INT4             NOT NULL,
-    latitude                       DOUBLE PRECISION NOT NULL,
-    longitude                      DOUBLE PRECISION NOT NULL,
     entrance                       TEXT             NULL,
     floor                          TEXT             NULL,
     flat                           TEXT             NULL,

@@ -14,7 +14,7 @@ func initRouter(k *infrastructure.Kernel, port string) (routerStartFunc func(wg 
 	router := echo.New()
 	router.Use(middleware.Recover())
 	router.HTTPErrorHandler = func(err error, c echo.Context) {
-		logger.Error(c.Request().Context(), "err: %s, request: %+v", err.Error(), c.Request())
+		logger.Errorf("err: %s, request: %+v", err.Error(), c.Request())
 
 		router.DefaultHTTPErrorHandler(err, c)
 	}
