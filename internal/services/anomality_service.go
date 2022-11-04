@@ -21,6 +21,7 @@ func NewAnomalityService(applicationService interfaces.IApplicationViewService, 
 	return &AnomalityService{AnomalyCheckers: []AnomalyClassCheck{
 		NewFastCloseAnomalyCheck(),
 		NewClosedWithoutCompletionCheck(applicationService, defectIdsDurationMap),
+		NewClosedWithCompletionWithoutReturningsCheck(applicationService, defectIdsDurationMap),
 	}}
 }
 
@@ -94,6 +95,57 @@ func (c ClosedWithoutCompletionCheck) CheckApplication(application bo.Applicatio
 	if application.ResultCode != consts.ResultCodeResolved &&
 		!utils.OneOf(c.ExceptRenderedServiceId, application.RenderedServicesIds) &&
 		!utils.OneOf(application.DefectId, c.ExceptDefectIds) {
+		if defectDuration, exists := c.DefectIdsDuration[application.DefectId]; exists && defectDuration != nil {
+			closedFrom := application.CreatedAt.Add(-*defectDuration)
+			opts := &bo.ApplicationRetrieveOpts{
+				ClosedFrom: &closedFrom,
+				ClosedTo:   &application.CreatedAt,
+
+				DefectIds: []int{application.DefectId},
+				UNOM:      &application.UNOM,
+				Entrance:  application.Entrance,
+				Floor:     application.Floor,
+				Flat:      application.Flat,
+			}
+			applications, err := c.applicationService.Get(context.Background(), opts)
+			if err != nil {
+				return false, c.Class, "", errors.Wrap(err, "CheckApplication")
+			}
+			if len(applications) > 0 {
+				applicationIds := make([]int32, 0, len(applications))
+				for _, application := range applications {
+					applicationIds = append(applicationIds, application.RootId)
+				}
+				return true, c.Class, fmt.Sprintf("applicationIds: %+v", applicationIds), nil
+			}
+		}
+	}
+	return false, c.Class, "", err
+}
+
+type ClosedWithCompletionWithoutReturningsCheck struct {
+	Class           string
+	ExceptDefectIds []int
+
+	DefectIdsDuration map[int]*time.Duration
+
+	applicationService interfaces.IApplicationViewService
+}
+
+func NewClosedWithCompletionWithoutReturningsCheck(applicationService interfaces.IApplicationViewService, defectIdsDurationMap map[int]*time.Duration) ClosedWithCompletionWithoutReturningsCheck {
+	return ClosedWithCompletionWithoutReturningsCheck{
+		Class:              "closed with completion but without returnings for same applicant",
+		ExceptDefectIds:    []int{7906, 7907},
+		DefectIdsDuration:  defectIdsDurationMap,
+		applicationService: applicationService,
+	}
+}
+
+func (c ClosedWithCompletionWithoutReturningsCheck) CheckApplication(application bo.Application) (isAbnormal bool, class string, description string, err error) {
+	if application.ResultCode == consts.ResultCodeResolved &&
+		!utils.OneOf(application.DefectId, c.ExceptDefectIds) &&
+		application.ClosedAt.Sub(application.CreatedAt) > time.Minute*10 &&
+		application.AmountOfReturnings == nil {
 		if defectDuration, exists := c.DefectIdsDuration[application.DefectId]; exists && defectDuration != nil {
 			closedFrom := application.CreatedAt.Add(-*defectDuration)
 			opts := &bo.ApplicationRetrieveOpts{
