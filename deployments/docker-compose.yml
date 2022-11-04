@@ -23,7 +23,7 @@ services:
 
   postgres:
     container_name: anomalius_pg
-    image: postgres:15rc2-alpine
+    image: postgres:15-alpine
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: qwerty

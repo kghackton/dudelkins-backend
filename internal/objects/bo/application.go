@@ -51,7 +51,7 @@ type Application struct {
 	Address                    string    // 31
 	UNOM                       int64     //32
 
-	GPS struct {
+	GPS *struct {
 		Latitude, Longitude float64
 	}
 
@@ -289,6 +289,13 @@ func (a Application) ToDto() dto.Application {
 		Verdict:                     a.Review,
 		RatingCode:                  a.RatingCode,
 		IsAbnormal:                  a.IsAbnormal,
+	}
+
+	if a.GPS != nil {
+		application.GPS = &struct {
+			Latitude  float64 `json:"latitude"`
+			Longitude float64 `json:"longitude"`
+		}{Latitude: a.GPS.Latitude, Longitude: a.GPS.Longitude}
 	}
 
 	application.AnomalyClasses = make(map[string]dto.AnomalyClass, len(a.AnomalyClasses))

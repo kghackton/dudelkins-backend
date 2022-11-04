@@ -42,7 +42,7 @@ func (s *ApplicationService) Get(ctx context.Context, opts *bo.ApplicationRetrie
 	}
 	defer conn.Close()
 
-	applicationsDao, err := s.ApplicationRepository.Select(ctx, conn, opts.QueryBuilderFuncs(), opts.SelectOpts())
+	applicationsDao, err := s.ApplicationRepository.SelectWithUnomCoordinates(ctx, conn, opts.QueryBuilderFuncs(), opts.SelectOpts())
 	if err != nil {
 		return applications, errors.Wrap(err, "Get")
 	}

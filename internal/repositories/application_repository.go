@@ -34,3 +34,19 @@ func (r *ApplicationRepository) Select(ctx context.Context, bun bun.IDB, queryOp
 
 	return applications, errors.Wrap(err, "Select")
 }
+
+func (r *ApplicationRepository) SelectWithUnomCoordinates(ctx context.Context, bun bun.IDB, queryOpts []bunutils.QueryBuilderFunc, selectOpts []bunutils.SelectOption) (applications dao.Applications, err error) {
+	selectQuery := bun.NewSelect().Model(&applications).
+		Relation("UnomCoordinate")
+
+	for _, builderFunc := range queryOpts {
+		selectQuery.ApplyQueryBuilder(builderFunc)
+	}
+	for _, opt := range selectOpts {
+		opt(selectQuery)
+	}
+
+	err = selectQuery.Scan(ctx, &applications)
+
+	return applications, errors.Wrap(err, "Select")
+}

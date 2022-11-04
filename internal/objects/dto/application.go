@@ -48,6 +48,11 @@ type Application struct {
 	Verdict                     *string    `json:"verdict"`
 	RatingCode                  *string    `json:"ratingCode"`
 
+	GPS *struct {
+		Latitude  float64 `json:"latitude"`
+		Longitude float64 `json:"longitude"`
+	} `json:"gps"`
+
 	IsAbnormal     *bool                   `json:"isAbnormal"`
 	AnomalyClasses map[string]AnomalyClass `json:"anomalyClasses"`
 }

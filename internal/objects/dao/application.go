@@ -55,6 +55,8 @@ type Application struct {
 	Review                      *string    `bun:"review"`
 	RatingCode                  *string    `bun:"rating_code"`
 
+	UnomCoordinate *UnomCoordinate `bun:"rel:has-one,join:unom=unom"`
+
 	IsAbnormal     *bool           `bun:"is_abnormal"`
 	AnomalyClasses json.RawMessage `bun:"anomaly_classes,type:jsonb"`
 }
@@ -155,6 +157,10 @@ func (a Application) ToBo() (application bo.Application, err error) {
 		Review:                      a.Review,
 		RatingCode:                  a.RatingCode,
 		IsAbnormal:                  a.IsAbnormal,
+	}
+
+	if a.UnomCoordinate != nil {
+		application.GPS = &struct{ Latitude, Longitude float64 }{Latitude: a.UnomCoordinate.Latitude, Longitude: a.UnomCoordinate.Longitude}
 	}
 
 	if err = json.Unmarshal(a.AnomalyClasses, &application.AnomalyClasses); err != nil {
