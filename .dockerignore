@@ -6,4 +6,5 @@ configs
 .env
 data
 *.exe
-assets/
+assets/applications.csv
+assets/applications_short.csv

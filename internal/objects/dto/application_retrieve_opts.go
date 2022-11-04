@@ -10,7 +10,7 @@ type ApplicationRetrieveOpts struct {
 	DefectIds   []int      `query:"defectId[]"`
 	Region      *string    `query:"region"`
 	District    *string    `query:"district"`
-	UNOM        *int       `query:"UNOM"`
+	UNOM        *int64     `query:"UNOM"`
 	Limit       *int       `query:"limit"`
 	Offset      *int       `query:"offset"`
 }

@@ -10,21 +10,24 @@ import (
 	"dudelkins/internal/objects/dao"
 )
 
-type ApplicationService struct {
+type ApplicationUploadService struct {
 	Db interfaces.IDBHandler
 
 	AnomalityService      interfaces.IAnomalityService
 	ApplicationRepository interfaces.IApplicationRepository
 }
 
-func (s *ApplicationService) Create(ctx context.Context, application bo.Application) (err error) {
+func (s *ApplicationUploadService) Create(ctx context.Context, application bo.Application) (err error) {
 	conn, err := s.Db.AcquireConn(ctx)
 	if err != nil {
 		return errors.Wrap(err, "Create")
 	}
 	defer conn.Close()
 
-	application.AnomalyClasses = s.AnomalityService.CheckForAnomalies(application)
+	application.AnomalyClasses, err = s.AnomalityService.CheckForAnomalies(application)
+	if err != nil {
+		return errors.Wrap(err, "Create")
+	}
 
 	var isAbnormal bool
 	for _, anomalyClass := range application.AnomalyClasses {
@@ -43,23 +46,4 @@ func (s *ApplicationService) Create(ctx context.Context, application bo.Applicat
 	err = s.ApplicationRepository.Insert(ctx, conn, applicationDao)
 
 	return errors.Wrap(err, "Create")
-}
-
-func (s *ApplicationService) Get(ctx context.Context, opts *bo.ApplicationRetrieveOpts) (applications bo.Applications, err error) {
-	conn, err := s.Db.AcquireConn(ctx)
-	if err != nil {
-		return applications, errors.Wrap(err, "Get")
-	}
-	defer conn.Close()
-
-	applicationsDao, err := s.ApplicationRepository.SelectWithUnomCoordinates(ctx, conn, opts.QueryBuilderFuncs(), opts.SelectOpts())
-	if err != nil {
-		return applications, errors.Wrap(err, "Get")
-	}
-	applications, err = applicationsDao.ToBo()
-	if err != nil {
-		return applications, errors.Wrap(err, "Get")
-	}
-
-	return
 }

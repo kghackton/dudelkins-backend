@@ -15,7 +15,8 @@ import (
 )
 
 type ApplicationController struct {
-	ApplicationService interfaces.IApplicationService
+	ApplicationUploadService interfaces.IApplicationUploadService
+	ApplicationViewService   interfaces.IApplicationViewService
 }
 
 func (c *ApplicationController) Create(ctx echo.Context) (err error) {
@@ -82,7 +83,7 @@ func (c *ApplicationController) Create(ctx echo.Context) (err error) {
 				"msg":  err.Error(),
 			})
 		}
-		if err = c.ApplicationService.Create(ctx.Request().Context(), application); err != nil {
+		if err = c.ApplicationUploadService.Create(ctx.Request().Context(), application); err != nil {
 			logger.Errorw(err.Error(), logFields...)
 			return ctx.JSON(http.StatusInternalServerError, echo.Map{
 				"code": http.StatusInternalServerError,
@@ -123,7 +124,7 @@ func (c *ApplicationController) Get(ctx echo.Context) (err error) {
 		})
 	}
 
-	applications, err := c.ApplicationService.Get(ctx.Request().Context(), &bo.ApplicationRetrieveOpts{
+	applications, err := c.ApplicationViewService.Get(ctx.Request().Context(), &bo.ApplicationRetrieveOpts{
 		ClosedFrom:  request.ClosedFrom,
 		ClosedTo:    request.ClosedTo,
 		IsAbnormal:  request.IsAbnormal,

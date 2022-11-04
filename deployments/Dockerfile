@@ -9,5 +9,6 @@ RUN go build -o main .
 FROM alpine:3.16
 
 COPY --from=builder /anomalius/cmd/main /anomalius/cmd/main
+COPY --from=builder /anomalius/assets/defectIdsDuration.json /anomalius/cmd/defectIdsDuration.json
 
 ENTRYPOINT ["/anomalius/cmd/main"]

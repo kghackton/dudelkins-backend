@@ -9,6 +9,9 @@ import (
 )
 
 type ApplicationRetrieveOpts struct {
+	CreatedFrom *time.Time
+	CreatedTo   *time.Time
+
 	ClosedFrom *time.Time
 	ClosedTo   *time.Time
 
@@ -18,13 +21,28 @@ type ApplicationRetrieveOpts struct {
 
 	Region   *string
 	District *string
-	UNOM     *int
+	UNOM     *int64
+
+	Entrance *string
+	Floor    *string
+	Flat     *string
 
 	Limit  *int
 	Offset *int
 }
 
 func (a ApplicationRetrieveOpts) QueryBuilderFuncs() (funcs []bunutils.QueryBuilderFunc) {
+	if a.CreatedFrom != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("created_at >= ?", a.CreatedFrom)
+		})
+	}
+	if a.CreatedTo != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("created_at <= ?", a.CreatedTo)
+		})
+	}
+
 	if a.ClosedFrom != nil {
 		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
 			return q.Where("closed_at >= ?", a.ClosedFrom)
@@ -65,7 +83,22 @@ func (a ApplicationRetrieveOpts) QueryBuilderFuncs() (funcs []bunutils.QueryBuil
 	}
 	if a.UNOM != nil {
 		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
-			return q.Where("unom = ?", a.UNOM)
+			return q.Where("a.unom = ?", a.UNOM)
+		})
+	}
+	if a.Entrance != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("entrance = ?", a.Entrance)
+		})
+	}
+	if a.Floor != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("floor = ?", a.Floor)
+		})
+	}
+	if a.Flat != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("flat = ?", a.Flat)
 		})
 	}
 
