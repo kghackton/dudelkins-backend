@@ -25,6 +25,16 @@ func (s *ApplicationService) Create(ctx context.Context, application bo.Applicat
 	defer conn.Close()
 
 	application.AnomalyClasses = s.AnomalityService.CheckForAnomalies(application)
+
+	var isAbnormal bool
+	for _, anomalyClass := range application.AnomalyClasses {
+		if anomalyClass.Verdict == true {
+			isAbnormal = true
+			break
+		}
+	}
+	application.IsAbnormal = &isAbnormal
+
 	applicationDao, err := dao.NewApplication(application)
 	if err != nil {
 		return errors.Wrap(err, "Create")

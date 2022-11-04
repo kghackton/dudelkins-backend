@@ -100,6 +100,7 @@ func NewApplication(application bo.Application) (Application, error) {
 		RatedAt:                     application.RatedAt,
 		Review:                      application.Review,
 		RatingCode:                  application.RatingCode,
+		IsAbnormal:                  application.IsAbnormal,
 	}
 
 	var err error
