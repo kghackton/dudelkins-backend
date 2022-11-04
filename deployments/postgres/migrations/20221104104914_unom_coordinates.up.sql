@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS unom_coordinates (
+    unom INT4 PRIMARY KEY,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL
+);
