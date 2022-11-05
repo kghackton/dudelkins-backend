@@ -22,6 +22,7 @@ func NewAnomalityService(applicationService interfaces.IApplicationViewService, 
 		NewFastCloseAnomalyCheck(),
 		NewClosedWithoutCompletionCheck(applicationService, defectIdsDurationMap),
 		NewClosedWithCompletionWithoutReturningsCheck(applicationService, defectIdsDurationMap),
+		NewBadReviewCheck(),
 	}}
 }
 
@@ -173,5 +174,23 @@ func (c ClosedWithCompletionWithoutReturningsCheck) CheckApplication(application
 			}
 		}
 	}
+	return false, c.Class, "", err
+}
+
+type BadReviewCheck struct {
+	Class string
+}
+
+func NewBadReviewCheck() BadReviewCheck {
+	return BadReviewCheck{
+		Class: "bad review",
+	}
+}
+
+func (c BadReviewCheck) CheckApplication(application bo.Application) (isAbnormal bool, class string, description string, err error) {
+	if application.RatingCode != nil && *application.RatingCode == consts.BadReviewRatingCode {
+		return true, c.Class, "", nil
+	}
+
 	return false, c.Class, "", err
 }
