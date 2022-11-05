@@ -23,6 +23,7 @@ func NewAnomalityService(applicationService interfaces.IApplicationViewService, 
 		NewClosedWithoutCompletionCheck(applicationService, defectIdsDurationMap),
 		NewClosedWithCompletionWithoutReturningsCheck(applicationService, defectIdsDurationMap),
 		NewBadReviewCheck(),
+		NewWithReturningsCheck(),
 	}}
 }
 
@@ -190,6 +191,112 @@ func NewBadReviewCheck() BadReviewCheck {
 func (c BadReviewCheck) CheckApplication(application bo.Application) (isAbnormal bool, class string, description string, err error) {
 	if application.RatingCode != nil && *application.RatingCode == consts.BadReviewRatingCode {
 		return true, c.Class, "", nil
+	}
+
+	return false, c.Class, "", err
+}
+
+type WithReturningsCheck struct {
+	Class     string
+	DefectIds map[int]struct{}
+}
+
+func NewWithReturningsCheck() WithReturningsCheck {
+	return WithReturningsCheck{
+		Class: "with returnings",
+		DefectIds: map[int]struct{}{
+			1853:  {},
+			2259:  {},
+			1677:  {},
+			2517:  {},
+			40150: {},
+			40153: {},
+			1705:  {},
+			2011:  {},
+			2333:  {},
+			40138: {},
+			2171:  {},
+			1688:  {},
+			1696:  {},
+			2098:  {},
+			39271: {},
+			1695:  {},
+			2184:  {},
+			3963:  {},
+			2233:  {},
+			2244:  {},
+			38008: {},
+			38009: {},
+			2222:  {},
+			2162:  {},
+			1939:  {},
+			2196:  {},
+			2053:  {},
+			13161: {},
+			1649:  {},
+			38562: {},
+			38567: {},
+			1614:  {},
+			38581: {},
+			38583: {},
+			2387:  {},
+			38585: {},
+			38578: {},
+			2392:  {},
+			1604:  {},
+			2423:  {},
+			2425:  {},
+			2421:  {},
+			1618:  {},
+			1664:  {},
+			18442: {},
+			2207:  {},
+			1630:  {},
+			1622:  {},
+			1701:  {},
+			38216: {},
+			38217: {},
+			1665:  {},
+			2220:  {},
+			2159:  {},
+			1620:  {},
+			40141: {},
+			1610:  {},
+			2158:  {},
+			2282:  {},
+			2213:  {},
+			2253:  {},
+			4075:  {},
+			2262:  {},
+			2221:  {},
+			2263:  {},
+			40144: {},
+			37735: {},
+			2082:  {},
+			39017: {},
+			39015: {},
+			2177:  {},
+			2170:  {},
+			38554: {},
+			40135: {},
+			1985:  {},
+			1698:  {},
+			1974:  {},
+			1694:  {},
+			1683:  {},
+			2246:  {},
+			38577: {},
+			2150:  {},
+			2175:  {},
+		},
+	}
+}
+
+func (c WithReturningsCheck) CheckApplication(application bo.Application) (isAbnormal bool, class string, description string, err error) {
+	if application.AmountOfReturnings != nil && *application.AmountOfReturnings > 0 {
+		if _, exists := c.DefectIds[application.DefectId]; exists {
+			return true, c.Class, "", nil
+		}
 	}
 
 	return false, c.Class, "", err
