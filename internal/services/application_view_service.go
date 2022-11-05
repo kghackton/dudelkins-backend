@@ -33,3 +33,18 @@ func (s *ApplicationViewService) Get(ctx context.Context, opts *bo.ApplicationRe
 
 	return
 }
+
+func (s *ApplicationViewService) CountAnomalyClasses(ctx context.Context, opts *bo.ApplicationRetrieveOpts) (anomalyClassCountersMap bo.AnomalyClassCountersMap, err error) {
+	conn, err := s.Db.AcquireConn(ctx)
+	if err != nil {
+		return anomalyClassCountersMap, errors.Wrap(err, "CountAnomalyClasses")
+	}
+	defer conn.Close()
+
+	anomalyClassCounters, err := s.ApplicationRepository.CountAnomalyClasses(ctx, conn, opts.QueryBuilderFuncs())
+	if err != nil {
+		return anomalyClassCountersMap, errors.Wrap(err, "CountAnomalyClasses")
+	}
+
+	return anomalyClassCounters.ToBo().ToMap(), errors.Wrap(err, "CountAnomalyClasses")
+}

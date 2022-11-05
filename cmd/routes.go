@@ -42,6 +42,11 @@ func registerRoutes(router *echo.Echo, injector infrastructure.IInjector) {
 		{
 			applications.POST("", applicationController.Create)
 			applications.GET("", applicationController.Get)
+
+			stats := applications.Group("/stats")
+			{
+				stats.GET("/anomalyClasses", applicationController.GetAnomalyClassesStats)
+			}
 		}
 	}
 }
