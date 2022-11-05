@@ -24,6 +24,7 @@ func NewAnomalityService(applicationService interfaces.IApplicationViewService, 
 		NewClosedWithCompletionWithoutReturningsCheck(applicationService, defectIdsDurationMap),
 		NewBadReviewCheck(),
 		NewWithReturningsCheck(),
+		NewClosedForLessThan10MinutesWithNoReturningsCheck(applicationService),
 	}}
 }
 
@@ -193,6 +194,53 @@ func (c BadReviewCheck) CheckApplication(application bo.Application) (isAbnormal
 		return true, c.Class, "", nil
 	}
 
+	return false, c.Class, "", err
+}
+
+type ClosedForLessThan10MinutesWithNoReturningsCheck struct {
+	Class                                string
+	ListOfCategoryIdsThatCanBeClosedFast []int
+	applicationService                   interfaces.IApplicationViewService
+}
+
+func NewClosedForLessThan10MinutesWithNoReturningsCheck(applicationService interfaces.IApplicationViewService) ClosedForLessThan10MinutesWithNoReturningsCheck {
+	return ClosedForLessThan10MinutesWithNoReturningsCheck{
+		Class:              "closed for less than 10 minutes with no returnings",
+		applicationService: applicationService,
+		ListOfCategoryIdsThatCanBeClosedFast: []int{
+			2303, 2245, 1903, 2396, 1922, 1771, 2096, 7907, 7906,
+		},
+	}
+}
+
+func (c ClosedForLessThan10MinutesWithNoReturningsCheck) CheckApplication(application bo.Application) (isAbnormal bool, class string, description string, err error) {
+	if utils.OneOf(application.DefectId, c.ListOfCategoryIdsThatCanBeClosedFast) &&
+		application.AmountOfReturnings == nil {
+		closedFrom := application.CreatedAt.Add(-time.Hour)
+		amountOfReturningsLessThan := 1
+		opts := &bo.ApplicationRetrieveOpts{
+			ClosedFrom: &closedFrom,
+			ClosedTo:   &application.CreatedAt,
+
+			DefectIds:                 []int{application.DefectId},
+			UNOM:                      &application.UNOM,
+			Entrance:                  application.Entrance,
+			Floor:                     application.Floor,
+			Flat:                      application.Flat,
+			AmoutOfReturningsLessThan: &amountOfReturningsLessThan,
+		}
+		applications, err := c.applicationService.Get(context.Background(), opts)
+		if err != nil {
+			return false, c.Class, "", errors.Wrap(err, "CheckApplication")
+		}
+		if len(applications) > 0 {
+			applicationIds := make([]int32, 0, len(applications))
+			for _, application := range applications {
+				applicationIds = append(applicationIds, application.RootId)
+			}
+			return true, c.Class, fmt.Sprintf("applicationIds: %+v", applicationIds), nil
+		}
+	}
 	return false, c.Class, "", err
 }
 

@@ -30,6 +30,9 @@ type ApplicationRetrieveOpts struct {
 	Floor    *string
 	Flat     *string
 
+	AmoutOfReturningsGreaterThan *int
+	AmoutOfReturningsLessThan    *int
+
 	Limit  *int
 	Offset *int
 }
@@ -116,6 +119,17 @@ func (a ApplicationRetrieveOpts) QueryBuilderFuncs() (funcs []bunutils.QueryBuil
 	if a.Flat != nil {
 		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
 			return q.Where("flat = ?", a.Flat)
+		})
+	}
+
+	if a.AmoutOfReturningsGreaterThan != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("amount_of_returnings > ?", a.AmoutOfReturningsGreaterThan)
+		})
+	}
+	if a.AmoutOfReturningsLessThan != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("amount_of_returnings < ?", a.AmoutOfReturningsLessThan)
 		})
 	}
 

@@ -5,5 +5,5 @@ const (
 	ResultCodeConsulted = `consulted`
 	ResultCodeResolved  = `resolved`
 
-	BadReviewRatingCode = `bad`
+	BadReviewRatingCode = `Плохо`
 )
