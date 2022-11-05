@@ -21,5 +21,5 @@ func (k *Kernel) InjectApplicationViewService() *services.ApplicationViewService
 }
 
 func (k *Kernel) InjectAnomalityService() *services.AnomalityService {
-	return services.NewAnomalityService(k.InjectApplicationViewService(), k.DefectIdsDuration)
+	return services.NewAnomalityService(k.InjectApplicationViewService(), k.DefectIdsDuration, k.DefectIdsDeviation)
 }

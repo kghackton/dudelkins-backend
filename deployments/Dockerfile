@@ -10,5 +10,6 @@ FROM alpine:3.16
 
 COPY --from=builder /anomalius/cmd/main /anomalius/cmd/main
 COPY --from=builder /anomalius/assets/defectIdsDuration.json /anomalius/cmd/defectIdsDuration.json
+COPY --from=builder /anomalius/assets/defectIdsDeviation.json /anomalius/cmd/defectIdsDeviation.json
 
 ENTRYPOINT ["/anomalius/cmd/main"]

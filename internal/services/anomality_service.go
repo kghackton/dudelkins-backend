@@ -17,7 +17,7 @@ type AnomalityService struct {
 	AnomalyCheckers []AnomalyClassCheck
 }
 
-func NewAnomalityService(applicationService interfaces.IApplicationViewService, defectIdsDurationMap map[int]*time.Duration) *AnomalityService {
+func NewAnomalityService(applicationService interfaces.IApplicationViewService, defectIdsDurationMap map[int]*time.Duration, defectIdsDeviationMap map[string]map[int]time.Duration) *AnomalityService {
 	return &AnomalityService{AnomalyCheckers: []AnomalyClassCheck{
 		NewFastCloseAnomalyCheck(),
 		NewClosedWithoutCompletionCheck(applicationService, defectIdsDurationMap),
@@ -25,6 +25,7 @@ func NewAnomalityService(applicationService interfaces.IApplicationViewService, 
 		NewBadReviewCheck(),
 		NewWithReturningsCheck(),
 		NewClosedForLessThan10MinutesWithNoReturningsCheck(applicationService),
+		NewDeviationCheck(defectIdsDeviationMap),
 	}}
 }
 
@@ -345,6 +346,34 @@ func (c WithReturningsCheck) CheckApplication(application bo.Application) (isAbn
 		if _, exists := c.DefectIds[application.DefectId]; exists {
 			return true, c.Class, "", nil
 		}
+	}
+
+	return false, c.Class, "", err
+}
+
+type DeviationCheck struct {
+	Class string
+
+	DefectIdsDeviation map[string]map[int]time.Duration
+}
+
+func NewDeviationCheck(defectIdsDeviationMap map[string]map[int]time.Duration) DeviationCheck {
+	return DeviationCheck{
+		Class:              "deviation",
+		DefectIdsDeviation: defectIdsDeviationMap,
+	}
+}
+
+func (c DeviationCheck) CheckApplication(application bo.Application) (isAbnormal bool, class string, description string, err error) {
+	expectedTimeDuration, exists := c.DefectIdsDeviation[application.ResultCode][application.DefectId]
+	if !exists {
+		return false, c.Class, "", err
+	}
+
+	applicationDuration := application.ClosedAt.Sub(application.CreatedAt)
+
+	if applicationDuration > expectedTimeDuration {
+		return true, c.Class, fmt.Sprintf("applicationDuration: %s, expected: %s", applicationDuration, expectedTimeDuration), err
 	}
 
 	return false, c.Class, "", err

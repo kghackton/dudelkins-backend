@@ -6,10 +6,10 @@ import (
 	"os"
 	"time"
 
+	"github.com/pkg/errors"
+
 	"dudelkins/internal/controllers"
 	"dudelkins/internal/environment"
-
-	"github.com/pkg/errors"
 )
 
 type IInjector interface {
@@ -19,8 +19,9 @@ type IInjector interface {
 type Kernel struct {
 	env environment.Environment
 
-	DefectIdsDuration map[int]*time.Duration
-	DbHandler         *PostgresDatabaseClient
+	DefectIdsDuration  map[int]*time.Duration
+	DefectIdsDeviation map[string]map[int]time.Duration
+	DbHandler          *PostgresDatabaseClient
 }
 
 func Inject(ctx context.Context, env environment.Environment) (k *Kernel, err error) {
@@ -34,6 +35,9 @@ func Inject(ctx context.Context, env environment.Environment) (k *Kernel, err er
 	k.DbHandler = postgresDatabaseClient
 
 	if err = k.InitDefectIdsDuration(); err != nil {
+		return nil, errors.Wrap(err, "Inject")
+	}
+	if err = k.InitDefectIdsDeviation(); err != nil {
 		return nil, errors.Wrap(err, "Inject")
 	}
 
@@ -57,6 +61,30 @@ func (k *Kernel) InitDefectIdsDuration() (err error) {
 	k.DefectIdsDuration = make(map[int]*time.Duration)
 	if err = json.NewDecoder(defectIdsFile).Decode(&k.DefectIdsDuration); err != nil {
 		return errors.Wrap(err, "InitDefectIdsDuration")
+	}
+
+	return
+}
+
+func (k *Kernel) InitDefectIdsDeviation() (err error) {
+	defectIdsFile, err := os.Open("/anomalius/cmd/defectIdsDeviation.json")
+	if err != nil {
+		return errors.Wrap(err, "InitDefectIdsDeviation")
+	}
+	defer defectIdsFile.Close()
+
+	var m map[string]map[int]int
+	if err = json.NewDecoder(defectIdsFile).Decode(&m); err != nil {
+		return errors.Wrap(err, "InitDefectIdsDeviation")
+	}
+
+	k.DefectIdsDeviation = make(map[string]map[int]time.Duration)
+	for status, defectIdMap := range m {
+		k.DefectIdsDeviation[status] = make(map[int]time.Duration)
+
+		for defectId, durationSeconds := range defectIdMap {
+			k.DefectIdsDeviation[status][defectId] = time.Second * time.Duration(durationSeconds)
+		}
 	}
 
 	return
