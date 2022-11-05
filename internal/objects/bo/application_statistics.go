@@ -31,3 +31,36 @@ func (a AnomalyClassCounters) ToMap() (m AnomalyClassCountersMap) {
 
 // region    district  management anomalyClass
 type AnomalyClassCountersMap map[string]map[string]map[string]map[string]int
+
+type NormalAbnormalCounter struct {
+	Region          string
+	District        string
+	AbnormalCounter int
+	NormalCounter   int
+}
+
+type NormalAbnormalCounters []NormalAbnormalCounter
+
+func (c NormalAbnormalCounters) ToMap() (m NormalAbnormalCountersMap) {
+	m = make(NormalAbnormalCountersMap, 12)
+
+	for _, normalAbnormalCounter := range c {
+		if _, exists := m[normalAbnormalCounter.Region]; !exists {
+			m[normalAbnormalCounter.Region] = make(map[string]NormalAbnormalAmountStruct, 100)
+		}
+		m[normalAbnormalCounter.Region][normalAbnormalCounter.District] = NormalAbnormalAmountStruct{
+			Abnormal: normalAbnormalCounter.AbnormalCounter,
+			Normal:   normalAbnormalCounter.NormalCounter,
+		}
+	}
+
+	return
+}
+
+// region    district
+type NormalAbnormalCountersMap map[string]map[string]NormalAbnormalAmountStruct
+
+type NormalAbnormalAmountStruct struct {
+	Abnormal int `json:"abnormal"`
+	Normal   int `json:"normal"`
+}

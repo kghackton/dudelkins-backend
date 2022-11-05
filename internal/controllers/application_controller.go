@@ -198,3 +198,49 @@ func (c *ApplicationController) GetAnomalyClassesStats(ctx echo.Context) (err er
 		"data": anomalyClassesCounterMap,
 	})
 }
+
+func (c *ApplicationController) GetNormalAbnormalStats(ctx echo.Context) (err error) {
+	var (
+		logFields = []interface{}{"path", ctx.Path(), "method", ctx.Request().Method}
+		request   dto.ApplicationRetrieveOpts
+	)
+
+	if err = ctx.Bind(&request); err != nil {
+		logger.Warnw(err.Error(), logFields...)
+		return ctx.JSON(http.StatusBadRequest, echo.Map{
+			"code": http.StatusBadRequest,
+			"msg":  err.Error(),
+		})
+	}
+	if err = ctx.Validate(request); err != nil {
+		logger.Warnw(err.Error(), logFields...)
+		return ctx.JSON(http.StatusBadRequest, echo.Map{
+			"code": http.StatusBadRequest,
+			"msg":  err.Error(),
+		})
+	}
+
+	normalAbnormalCountersMap, err := c.ApplicationViewService.CountNormalAbnormal(ctx.Request().Context(), &bo.ApplicationRetrieveOpts{
+		ClosedFrom:     request.ClosedFrom,
+		ClosedTo:       request.ClosedTo,
+		AnomalyClasses: request.AnomalyClasses,
+		CategoryIds:    request.CategoryIds,
+		DefectIds:      request.DefectIds,
+		Region:         request.Region,
+		District:       request.District,
+	})
+	if err != nil {
+		logger.Errorw(err.Error(), logFields...)
+		return ctx.JSON(http.StatusInternalServerError, echo.Map{
+			"code": http.StatusInternalServerError,
+			"msg":  err.Error(),
+		})
+	}
+
+	logger.Infow("", logFields...)
+
+	return ctx.JSON(http.StatusOK, echo.Map{
+		"code": http.StatusOK,
+		"data": normalAbnormalCountersMap,
+	})
+}
