@@ -125,16 +125,17 @@ func (c *ApplicationController) Get(ctx echo.Context) (err error) {
 	}
 
 	applications, err := c.ApplicationViewService.Get(ctx.Request().Context(), &bo.ApplicationRetrieveOpts{
-		ClosedFrom:  request.ClosedFrom,
-		ClosedTo:    request.ClosedTo,
-		IsAbnormal:  request.IsAbnormal,
-		CategoryIds: request.CategoryIds,
-		DefectIds:   request.DefectIds,
-		Region:      request.Region,
-		District:    request.District,
-		UNOM:        request.UNOM,
-		Limit:       request.Limit,
-		Offset:      request.Offset,
+		ClosedFrom:     request.ClosedFrom,
+		ClosedTo:       request.ClosedTo,
+		IsAbnormal:     request.IsAbnormal,
+		AnomalyClasses: request.AnomalyClasses,
+		CategoryIds:    request.CategoryIds,
+		DefectIds:      request.DefectIds,
+		Region:         request.Region,
+		District:       request.District,
+		UNOM:           request.UNOM,
+		Limit:          request.Limit,
+		Offset:         request.Offset,
 	})
 	if err != nil {
 		logger.Errorw(err.Error(), logFields...)

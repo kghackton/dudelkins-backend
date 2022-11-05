@@ -33,9 +33,11 @@ func (s *AnomalityService) CheckForAnomalies(application bo.Application) (anomal
 			return nil, errors.Wrap(errors.WithMessagef(err, "class: %s", class), "CheckForAnomalies")
 		}
 
-		anomalies[class] = bo.AnomalyClass{
-			Verdict:     verdict,
-			Description: description,
+		if verdict == true {
+			anomalies[class] = bo.AnomalyClass{
+				Verdict:     verdict,
+				Description: description,
+			}
 		}
 	}
 	return

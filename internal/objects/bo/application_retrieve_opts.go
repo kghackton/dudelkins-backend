@@ -1,6 +1,7 @@
 package bo
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -15,7 +16,9 @@ type ApplicationRetrieveOpts struct {
 	ClosedFrom *time.Time
 	ClosedTo   *time.Time
 
-	IsAbnormal  *bool
+	IsAbnormal     *bool
+	AnomalyClasses []string
+
 	CategoryIds []int
 	DefectIds   []int
 
@@ -57,6 +60,20 @@ func (a ApplicationRetrieveOpts) QueryBuilderFuncs() (funcs []bunutils.QueryBuil
 	if a.IsAbnormal != nil {
 		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
 			return q.Where("is_abnormal = ?", a.IsAbnormal)
+		})
+	}
+	if len(a.AnomalyClasses) > 0 {
+		anomalyClassFilter := "anomaly_classes @? '$ ? ("
+		for idx, anomalyClass := range a.AnomalyClasses {
+			if idx != 0 {
+				anomalyClassFilter += "||"
+			}
+			anomalyClassFilter += fmt.Sprintf(`exists (@."%s")`, anomalyClass)
+		}
+		anomalyClassFilter += `)'`
+
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where(anomalyClassFilter)
 		})
 	}
 
