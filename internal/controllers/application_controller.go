@@ -139,6 +139,11 @@ func (c *ApplicationController) Get(ctx echo.Context) (err error) {
 		})
 	}
 
+	if request.Limit == nil {
+		defaultLimit := 100
+		request.Limit = &defaultLimit
+	}
+
 	applications, err := c.ApplicationViewService.Get(ctx.Request().Context(), &bo.ApplicationRetrieveOpts{
 		ClosedFrom:     request.ClosedFrom,
 		ClosedTo:       request.ClosedTo,
