@@ -8,3 +8,4 @@ data
 *.exe
 assets/applications.csv
 assets/applications_short.csv
+doc/
