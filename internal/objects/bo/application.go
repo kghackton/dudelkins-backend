@@ -166,13 +166,16 @@ func NewApplicationFromRecord(record []string) (a Application, err error) {
 	// TODO: GPS FIELD
 
 	if record[33] != "" {
-		a.Entrance = &record[33]
+		entrance := record[33]
+		a.Entrance = &entrance
 	}
 	if record[34] != "" {
-		a.Floor = &record[34]
+		floor := record[34]
+		a.Floor = &floor
 	}
 	if record[35] != "" {
-		a.Flat = &record[35]
+		flat := record[35]
+		a.Flat = &flat
 	}
 
 	a.OdsNumber = record[36]
@@ -237,10 +240,12 @@ func NewApplicationFromRecord(record []string) (a Application, err error) {
 	}
 
 	if record[62] != "" {
-		a.Review = &record[62]
+		revied := record[62]
+		a.Review = &revied
 	}
 	if record[63] != "" {
-		a.RatingCode = &record[63]
+		ratingCode := record[63]
+		a.RatingCode = &ratingCode
 	}
 
 	return
