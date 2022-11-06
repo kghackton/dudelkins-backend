@@ -89,7 +89,7 @@ func (s *ApplicationViewService) CountNormalAbnormal(ctx context.Context, opts *
 	}
 	defer conn.Close()
 
-	normalAbnormalCounters, err := s.ApplicationRepository.CountNormalAbnormal(ctx, conn, opts.QueryBuilderFuncs())
+	normalAbnormalCounters, err := s.ApplicationRepository.CountNormalAbnormal(ctx, conn, opts.QueryBuilderFuncs(), opts.QueryBuilderFuncsForNormalApplications())
 	if err != nil {
 		return normalAbnormalCountersMap, errors.Wrap(err, "CountNormalAbnormal")
 	}

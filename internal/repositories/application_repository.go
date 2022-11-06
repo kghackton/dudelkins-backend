@@ -80,7 +80,7 @@ func (r *ApplicationRepository) CountAnomalyClasses(ctx context.Context, bunC bu
 	return anomalyClassCounters, errors.Wrap(err, "CountAnomalyClasses")
 }
 
-func (r *ApplicationRepository) CountNormalAbnormal(ctx context.Context, bunC bun.IDB, queryOpts []bunutils.QueryBuilderFunc) (normalAbnormalCounters dao.NormalAbnormalCounters, err error) {
+func (r *ApplicationRepository) CountNormalAbnormal(ctx context.Context, bunC bun.IDB, queryOpts []bunutils.QueryBuilderFunc, queryOptsForNormal []bunutils.QueryBuilderFunc) (normalAbnormalCounters dao.NormalAbnormalCounters, err error) {
 	cte1 := bunC.NewSelect().Table("applications").
 		Column("region", "district").
 		ColumnExpr("count(*) as abnormal_counter").
@@ -93,6 +93,8 @@ func (r *ApplicationRepository) CountNormalAbnormal(ctx context.Context, bunC bu
 		Group("region", "district")
 	for _, builderFunc := range queryOpts {
 		cte1.ApplyQueryBuilder(builderFunc)
+	}
+	for _, builderFunc := range queryOptsForNormal {
 		cte2.ApplyQueryBuilder(builderFunc)
 	}
 

@@ -136,6 +136,91 @@ func (a ApplicationRetrieveOpts) QueryBuilderFuncs() (funcs []bunutils.QueryBuil
 	return
 }
 
+func (a ApplicationRetrieveOpts) QueryBuilderFuncsForNormalApplications() (funcs []bunutils.QueryBuilderFunc) {
+	if a.CreatedFrom != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("created_at >= ?", a.CreatedFrom)
+		})
+	}
+	if a.CreatedTo != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("created_at <= ?", a.CreatedTo)
+		})
+	}
+
+	if a.ClosedFrom != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("closed_at >= ?", a.ClosedFrom)
+		})
+	}
+	if a.ClosedTo != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("closed_at <= ?", a.ClosedTo)
+		})
+	}
+
+	if a.IsAbnormal != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("is_abnormal = ?", a.IsAbnormal)
+		})
+	}
+
+	if len(a.CategoryIds) > 0 {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("category_id IN (?)", bun.In(a.CategoryIds))
+		})
+	}
+	if len(a.DefectIds) > 0 {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("defect_id IN (?)", bun.In(a.DefectIds))
+		})
+	}
+
+	if a.Region != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("region = ?", a.Region)
+		})
+	}
+	if a.District != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("district = ?", a.District)
+		})
+	}
+	if a.UNOM != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("a.unom = ?", a.UNOM)
+		})
+	}
+	if a.Entrance != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("entrance = ?", a.Entrance)
+		})
+	}
+	if a.Floor != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("floor = ?", a.Floor)
+		})
+	}
+	if a.Flat != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("flat = ?", a.Flat)
+		})
+	}
+
+	if a.AmoutOfReturningsGreaterThan != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("amount_of_returnings > ?", a.AmoutOfReturningsGreaterThan)
+		})
+	}
+	if a.AmoutOfReturningsLessThan != nil {
+		funcs = append(funcs, func(q bun.QueryBuilder) bun.QueryBuilder {
+			return q.Where("amount_of_returnings < ?", a.AmoutOfReturningsLessThan)
+		})
+	}
+
+	return
+}
+
 func (a ApplicationRetrieveOpts) SelectOpts() (opts []bunutils.SelectOption) {
 	if a.Limit != nil {
 		opts = append(opts, bunutils.WithLimit(*a.Limit))
