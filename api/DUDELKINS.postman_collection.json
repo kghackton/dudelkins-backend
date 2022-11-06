@@ -1,0 +1,746 @@
+{
+	"info": {
+		"_postman_id": "d1d5113d-99d3-4f78-8910-f570899e86fc",
+		"name": "DUDELKINS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6622390"
+	},
+	"item": [
+		{
+			"name": "GET Application",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/applications/:rootId",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"applications",
+						":rootId"
+					],
+					"variable": [
+						{
+							"key": "rootId",
+							"value": "73411846",
+							"description": "Корневой идентификатор заявки"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GET Application",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/applications/:rootId",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"applications",
+								":rootId"
+							],
+							"variable": [
+								{
+									"key": "rootId",
+									"value": "73411846",
+									"description": "Корневой идентификатор заявки"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"rootId\": 73411846,\n        \"versionId\": 73512609,\n        \"number\": \"00000999/21\",\n        \"createdAt\": \"2021-01-01T06:43:21.588255Z\",\n        \"versionStartedAt\": \"2021-01-03T11:35:39.270826Z\",\n        \"isIncident\": false,\n        \"parentRootId\": null,\n        \"userLastEdited\": \"robot_cc\",\n        \"userLastEditedOrganization\": \"Внешняя система\",\n        \"comment\": \"житель положил трубку опрос не проведен по короновирусу.;Заявитель звонит ОТОПЛЕНИЯ НЕТ;Нет отопления;Произведен замер температуры в квартире после регулировки системы ЦО.\",\n        \"categoryId\": 53,\n        \"defectId\": 1718,\n        \"isDefectReturnable\": false,\n        \"applicantDescription\": \"Повторное обращение ,заявка составлена по настоянию жителя во всей квартире все батареи холодные\",\n        \"applicantQuestion\": \"\",\n        \"emergencyType\": \"normal\",\n        \"region\": \"ЮВАО\",\n        \"district\": \"Рязанский\",\n        \"address\": \"улица Фёдора Полетаева, дом 13\",\n        \"UNOM\": 31805,\n        \"entrance\": \"2\",\n        \"floor\": \"13\",\n        \"flat\": \"102\",\n        \"odsNumber\": \"ОДС №2-Рязанский\",\n        \"managementCompanyTitle\": \"ГБУ «ЖИЛИЩНИК РЯЗАНСКОГО РАЙОНА»\",\n        \"executionCompanyTitle\": \"ПАО \\\"МОЭК\\\" \",\n        \"renderedServicesIds\": [\n            15313,\n            15592\n        ],\n        \"consumedMaterials\": \"\",\n        \"renderedSecurityServicesIds\": [],\n        \"resultCode\": \"resolved\",\n        \"amountOfReturnings\": 0,\n        \"lastReturnedAt\": null,\n        \"isAlarmed\": false,\n        \"closedAt\": \"2021-01-01T11:49:37.433372Z\",\n        \"preferableFrom\": null,\n        \"preferableTo\": null,\n        \"ratedAt\": \"2021-04-15T22:43:28.840557Z\",\n        \"verdict\": \"Работы не выполнены\",\n        \"ratingCode\": \"Плохо\",\n        \"gps\": {\n            \"latitude\": 37.781751,\n            \"longitude\": 55.711775\n        },\n        \"isAbnormal\": true,\n        \"anomalyClasses\": {\n            \"bad review\": {\n                \"verdict\": true\n            }\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "GET Applications",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/applications?limit=10&anomalyClass[]=bad review&anomalyClass[]=closed without completion for same applicant",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"applications"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10",
+							"description": "Количество заявок к выдаче"
+						},
+						{
+							"key": "offset",
+							"value": "0",
+							"description": "Количество заявок к пропуску из выборки",
+							"disabled": true
+						},
+						{
+							"key": "isAbnormal",
+							"value": "true",
+							"description": "Статус аномальности true|false",
+							"disabled": true
+						},
+						{
+							"key": "anomalyClass[]",
+							"value": "bad review",
+							"description": "Класс аномальности"
+						},
+						{
+							"key": "anomalyClass[]",
+							"value": "closed without completion for same applicant",
+							"description": "Класс аномальности"
+						},
+						{
+							"key": "closedFrom",
+							"value": "RFC3339",
+							"description": "Фильтр на время закрытия заявки ОТ",
+							"disabled": true
+						},
+						{
+							"key": "closedTo",
+							"value": "RFC3339",
+							"description": "Фильтр на время закрытия заявки ДО",
+							"disabled": true
+						},
+						{
+							"key": "categoryId[]",
+							"value": "123",
+							"description": "Категория дефекта",
+							"disabled": true
+						},
+						{
+							"key": "defectId[]",
+							"value": "123",
+							"description": "Корневая категория дефекта",
+							"disabled": true
+						},
+						{
+							"key": "region",
+							"value": "СВАО",
+							"description": "Регион",
+							"disabled": true
+						},
+						{
+							"key": "district",
+							"value": "хуйня",
+							"description": "Район",
+							"disabled": true
+						},
+						{
+							"key": "UNOM",
+							"value": "12312312",
+							"description": "Идентификатор UNOM",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GET Applications",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/applications?limit=10&anomalyClass[]=bad review&anomalyClass[]=closed without completion for same applicant",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"applications"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Количество заявок к выдаче"
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"description": "Количество заявок к пропуску из выборки",
+									"disabled": true
+								},
+								{
+									"key": "isAbnormal",
+									"value": "true",
+									"description": "Статус аномальности true|false",
+									"disabled": true
+								},
+								{
+									"key": "anomalyClass[]",
+									"value": "bad review",
+									"description": "Класс аномальности"
+								},
+								{
+									"key": "anomalyClass[]",
+									"value": "closed without completion for same applicant",
+									"description": "Класс аномальности"
+								},
+								{
+									"key": "closedFrom",
+									"value": "RFC3339",
+									"description": "Фильтр на время закрытия заявки ОТ",
+									"disabled": true
+								},
+								{
+									"key": "closedTo",
+									"value": "RFC3339",
+									"description": "Фильтр на время закрытия заявки ДО",
+									"disabled": true
+								},
+								{
+									"key": "categoryId[]",
+									"value": "123",
+									"description": "Категория дефекта",
+									"disabled": true
+								},
+								{
+									"key": "defectId[]",
+									"value": "123",
+									"description": "Корневая категория дефекта",
+									"disabled": true
+								},
+								{
+									"key": "region",
+									"value": "СВАО",
+									"description": "Регион",
+									"disabled": true
+								},
+								{
+									"key": "district",
+									"value": "хуйня",
+									"description": "Район",
+									"disabled": true
+								},
+								{
+									"key": "UNOM",
+									"value": "12312312",
+									"description": "Идентификатор UNOM",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": [\n        {\n            \"rootId\": 73407366,\n            \"versionId\": 73518683,\n            \"number\": \"00000005/21\",\n            \"createdAt\": \"2020-12-31T21:13:20.704235Z\",\n            \"versionStartedAt\": \"2021-01-03T12:55:37.42304Z\",\n            \"isIncident\": true,\n            \"parentRootId\": null,\n            \"userLastEdited\": \"robot_cc\",\n            \"userLastEditedOrganization\": \"Внешняя система\",\n            \"comment\": \"Заявка передана А/ службу ГБУ\\\"Жилищник.Бригада на месте уже работают;Перепущен стояк ЦО А/Служба ГБУ.;Со слов слесаря сантехника А/Службы в подвале проверены параметры подачи температуры на ЦО. Т- 1 43 Т-2-36 давление 4/ 8 Вызвана А/Служба КП МЭД Заявку приняла диспетчер Соколова.\",\n            \"categoryId\": 53,\n            \"defectId\": 2297,\n            \"isDefectReturnable\": false,\n            \"applicantDescription\": \"во всей квартире все батареи холодные\",\n            \"applicantQuestion\": \"\",\n            \"emergencyType\": \"normal\",\n            \"region\": \"ЗАО\",\n            \"district\": \"Филевский Парк\",\n            \"address\": \"Кастанаевская улица, дом 11\",\n            \"UNOM\": 9594,\n            \"entrance\": \"5\",\n            \"floor\": \"5\",\n            \"flat\": \"160\",\n            \"odsNumber\": \"ОДС №3040-Филевский Парк\",\n            \"managementCompanyTitle\": \"ГБУ «ЖИЛИЩНИК РАЙОНА ФИЛЕВСКИЙ ПАРК»\",\n            \"executionCompanyTitle\": \"Аварийная Служба (Филевский Парк)\",\n            \"renderedServicesIds\": [\n                14980\n            ],\n            \"consumedMaterials\": \"\",\n            \"renderedSecurityServicesIds\": [],\n            \"resultCode\": \"resolved\",\n            \"amountOfReturnings\": 0,\n            \"lastReturnedAt\": null,\n            \"isAlarmed\": false,\n            \"closedAt\": \"2020-12-31T21:41:08.708978Z\",\n            \"preferableFrom\": null,\n            \"preferableTo\": null,\n            \"ratedAt\": \"2021-04-15T22:43:28.840557Z\",\n            \"verdict\": \"Работы выполнены\",\n            \"ratingCode\": \"Плохо\",\n            \"gps\": null,\n            \"isAbnormal\": true,\n            \"anomalyClasses\": {\n                \"bad review\": {\n                    \"verdict\": true\n                }\n            }\n        },\n        {\n            \"rootId\": 73407631,\n            \"versionId\": 73518675,\n            \"number\": \"00000052/21\",\n            \"createdAt\": \"2020-12-31T21:54:49.801684Z\",\n            \"versionStartedAt\": \"2021-01-03T12:55:35.371796Z\",\n            \"isIncident\": false,\n            \"parentRootId\": null,\n            \"userLastEdited\": \"robot_cc\",\n            \"userLastEditedOrganization\": \"Внешняя система\",\n            \"comment\": \"Передано в Аварийную Службу.;Заявка будет передана на выполнение  в рабочее время мастерского участка  01-01.2021  с 08-00 ч.;До 14.00 ждут\",\n            \"categoryId\": 59,\n            \"defectId\": 2149,\n            \"isDefectReturnable\": true,\n            \"applicantDescription\": \"треск,перепады напряжения включается и выключается свет\",\n            \"applicantQuestion\": \"\",\n            \"emergencyType\": \"normal\",\n            \"region\": \"ЮВАО\",\n            \"district\": \"Люблино\",\n            \"address\": \"Люблинская улица, дом 113, корпус 3\",\n            \"UNOM\": 13526,\n            \"entrance\": \"1\",\n            \"floor\": \"3\",\n            \"flat\": \"10\",\n            \"odsNumber\": \"ОДС №4-Люблино\",\n            \"managementCompanyTitle\": \"ГБУ «ЖИЛИЩНИК РАЙОНА ЛЮБЛИНО»\",\n            \"executionCompanyTitle\": \"РЭУ-2 (Люблино)\",\n            \"renderedServicesIds\": [\n                18261\n            ],\n            \"consumedMaterials\": \"\",\n            \"renderedSecurityServicesIds\": [\n                15378\n            ],\n            \"resultCode\": \"cancel\",\n            \"amountOfReturnings\": 0,\n            \"lastReturnedAt\": null,\n            \"isAlarmed\": true,\n            \"closedAt\": \"2020-12-31T22:24:39.826169Z\",\n            \"preferableFrom\": \"2021-01-01T05:00:00Z\",\n            \"preferableTo\": \"2021-01-01T11:00:00Z\",\n            \"ratedAt\": \"2021-04-15T22:43:28.840557Z\",\n            \"verdict\": \"Работы не выполнены\",\n            \"ratingCode\": \"Плохо\",\n            \"gps\": null,\n            \"isAbnormal\": true,\n            \"anomalyClasses\": {\n                \"bad review\": {\n                    \"verdict\": true\n                }\n            }\n        },\n        {\n            \"rootId\": 73407791,\n            \"versionId\": 73518672,\n            \"number\": \"00000084/21\",\n            \"createdAt\": \"2020-12-31T22:14:16.275392Z\",\n            \"versionStartedAt\": \"2021-01-03T12:55:34.574198Z\",\n            \"isIncident\": false,\n            \"parentRootId\": null,\n            \"userLastEdited\": \"robot_cc\",\n            \"userLastEditedOrganization\": \"Внешняя система\",\n            \"comment\": \"В комнате через люстру течет .заявка передана Аварийную службу Замоскворечье принял Шинкаренко.\\t Охранные мероприятия\\t 01 ч 44 мин Рекомендованный срок\\t 23 ч 44 мин;Течет  с кровли  требуется очистка кровли от снега  .Заявка  передана на контроль мастеру участка №3 Герасимову В.А. и начальнику участка №3 Головчак А. В.Очистка кровли от снега будет  проводиться 01.01 2xxxг после 08:00;01.01.202x xx:31 Герасименко Тамара Меркуловна Обследовано Аварийной службой \\\"Замоскворечье\\\".Течет с кровли требуется очистка кровли от снега .Заявка передана на контроль мастеру участка №3 Герасимову В.А. и начальнику участка №3 Головчак А. В.Очистка кровли от снега будет проводиться 01.01 2xxxг после 08:00;Течь усилилась. Заявитель просит связаться с ней диспетчера.;Течь усилилась. Заявитель просит связаться с ней диспетчера.;Заявка  в  работе  у  кровельщика  М У -3.  В  настоящее  время  проводится   обследование .;Течь  локализована .Произведена  очистка кровли  от  снега  и  наледи .Заявитель  проинформирован   о  проделанной  работе  по  заявке .\",\n            \"categoryId\": 50,\n            \"defectId\": 2283,\n            \"isDefectReturnable\": false,\n            \"applicantDescription\": \"В комнате через люстру.\",\n            \"applicantQuestion\": \"\",\n            \"emergencyType\": \"emergency\",\n            \"region\": \"ЦАО\",\n            \"district\": \"Замоскворечье\",\n            \"address\": \"Новокузнецкая улица, дом 4/12, строение 1\",\n            \"UNOM\": 16580,\n            \"entrance\": \"2\",\n            \"floor\": \"5\",\n            \"flat\": \"16\",\n            \"odsNumber\": \"ОДС №5-Замоскворечье\",\n            \"managementCompanyTitle\": \"ГБУ «ЖИЛИЩНИК РАЙОНА ЗАМОСКВОРЕЧЬЕ»\",\n            \"executionCompanyTitle\": \"Мастерский участок № 3 (Замоскворечье)\",\n            \"renderedServicesIds\": [\n                15269,\n                15832\n            ],\n            \"consumedMaterials\": \"\",\n            \"renderedSecurityServicesIds\": [\n                15102\n            ],\n            \"resultCode\": \"resolved\",\n            \"amountOfReturnings\": 0,\n            \"lastReturnedAt\": null,\n            \"isAlarmed\": false,\n            \"closedAt\": \"2021-01-01T12:51:04.979176Z\",\n            \"preferableFrom\": null,\n            \"preferableTo\": null,\n            \"ratedAt\": \"2021-04-15T22:43:28.840557Z\",\n            \"verdict\": \"Работы не выполнены\",\n            \"ratingCode\": \"Плохо\",\n            \"gps\": {\n                \"latitude\": 37.629328,\n                \"longitude\": 55.739188\n            },\n            \"isAbnormal\": true,\n            \"anomalyClasses\": {\n                \"bad review\": {\n                    \"verdict\": true\n                },\n                \"deviation\": {\n                    \"verdict\": true,\n                    \"description\": \"applicationDuration: 14h36m48.703784s, expected: 10h35m59s\"\n                }\n            }\n        },\n        {\n            \"rootId\": 73407934,\n            \"versionId\": 73514302,\n            \"number\": \"00000114/21\",\n            \"createdAt\": \"2020-12-31T22:35:09.343165Z\",\n            \"versionStartedAt\": \"2021-01-03T11:55:16.14734Z\",\n            \"isIncident\": false,\n            \"parentRootId\": null,\n            \"userLastEdited\": \"robot_cc\",\n            \"userLastEditedOrganization\": \"Внешняя система\",\n            \"comment\": \"ДЧ:   необходимо включить уличное освещение темно. побыстрее.\",\n            \"categoryId\": 57,\n            \"defectId\": 2019,\n            \"isDefectReturnable\": false,\n            \"applicantDescription\": \"над всеми подъездами включить\",\n            \"applicantQuestion\": \"\",\n            \"emergencyType\": \"normal\",\n            \"region\": \"ЮЗАО\",\n            \"district\": \"Зюзино\",\n            \"address\": \"Одесская улица, дом 14, корпус 3А\",\n            \"UNOM\": 68026,\n            \"entrance\": \"2\",\n            \"floor\": \"7\",\n            \"flat\": \"89\",\n            \"odsNumber\": \"ОДС №1235-Зюзино\",\n            \"managementCompanyTitle\": \"ГБУ «ЖИЛИЩНИК РАЙОНА ЗЮЗИНО»\",\n            \"executionCompanyTitle\": \"Мастерский участок № 5, № 6 (Зюзино)\",\n            \"renderedServicesIds\": [\n                15676\n            ],\n            \"consumedMaterials\": \"\",\n            \"renderedSecurityServicesIds\": [],\n            \"resultCode\": \"resolved\",\n            \"amountOfReturnings\": 0,\n            \"lastReturnedAt\": null,\n            \"isAlarmed\": true,\n            \"closedAt\": \"2021-01-01T01:08:02.040278Z\",\n            \"preferableFrom\": null,\n            \"preferableTo\": null,\n            \"ratedAt\": \"2021-04-15T22:43:28.840557Z\",\n            \"verdict\": \"Работы не выполнены\",\n            \"ratingCode\": \"Плохо\",\n            \"gps\": {\n                \"latitude\": 37.587237,\n                \"longitude\": 55.65618\n            },\n            \"isAbnormal\": true,\n            \"anomalyClasses\": {\n                \"bad review\": {\n                    \"verdict\": true\n                }\n            }\n        },\n        {\n            \"rootId\": 73407953,\n            \"versionId\": 73408284,\n            \"number\": \"00000117/21\",\n            \"createdAt\": \"2020-12-31T22:37:03.663061Z\",\n            \"versionStartedAt\": \"2020-12-31T23:19:48.864651Z\",\n            \"isIncident\": false,\n            \"parentRootId\": null,\n            \"userLastEdited\": \"SelezenTV\",\n            \"userLastEditedOrganization\": \"Диспетчерская\",\n            \"comment\": \"\",\n            \"categoryId\": 1594,\n            \"defectId\": 4094,\n            \"isDefectReturnable\": false,\n            \"applicantDescription\": \"С потолка в комнате через люстру.\",\n            \"applicantQuestion\": \"\",\n            \"emergencyType\": \"emergency\",\n            \"region\": \"ЮАО\",\n            \"district\": \"Бирюлево Западное\",\n            \"address\": \"Булатниковский проезд, дом 14, корпус 3\",\n            \"UNOM\": 2985,\n            \"entrance\": \"4\",\n            \"floor\": \"3\",\n            \"flat\": \"154\",\n            \"odsNumber\": \"ОДС №145-Бирюлево Западное\",\n            \"managementCompanyTitle\": \"ГБУ «ЖИЛИЩНИК РАЙОНА БИРЮЛЕВО ЗАПАДНОЕ»\",\n            \"executionCompanyTitle\": \"АС Бирюлево Западное\",\n            \"renderedServicesIds\": [\n                18262\n            ],\n            \"consumedMaterials\": \"\",\n            \"renderedSecurityServicesIds\": [\n                18426\n            ],\n            \"resultCode\": \"consulted\",\n            \"amountOfReturnings\": 0,\n            \"lastReturnedAt\": null,\n            \"isAlarmed\": false,\n            \"closedAt\": \"2020-12-31T23:19:48.864651Z\",\n            \"preferableFrom\": null,\n            \"preferableTo\": null,\n            \"ratedAt\": null,\n            \"verdict\": null,\n            \"ratingCode\": null,\n            \"gps\": {\n                \"latitude\": 37.656956,\n                \"longitude\": 55.582652\n            },\n            \"isAbnormal\": true,\n            \"anomalyClasses\": {\n                \"DudelkINS\": {\n                    \"verdict\": true,\n                    \"description\": \"confidence: 1.000000\"\n                },\n                \"closed without completion for same applicant\": {\n                    \"verdict\": true,\n                    \"description\": \"applicationIds: [73407644]\"\n                }\n            }\n        },\n        {\n            \"rootId\": 73408170,\n            \"versionId\": 73514291,\n            \"number\": \"00000169/21\",\n            \"createdAt\": \"2020-12-31T23:08:27.329828Z\",\n            \"versionStartedAt\": \"2021-01-03T11:55:13.064044Z\",\n            \"isIncident\": false,\n            \"parentRootId\": null,\n            \"userLastEdited\": \"robot_cc\",\n            \"userLastEditedOrganization\": \"Внешняя система\",\n            \"comment\": \"Ведутся снегоуборочные работы согласно нормативам            по снежному покрову\",\n            \"categoryId\": 49,\n            \"defectId\": 2203,\n            \"isDefectReturnable\": false,\n            \"applicantDescription\": \"Около подьезда много снега .Завалило даже пандус.Просьба очистить и убрать.\",\n            \"applicantQuestion\": \"\",\n            \"emergencyType\": \"normal\",\n            \"region\": \"САО\",\n            \"district\": \"Коптево\",\n            \"address\": \"улица Зои и Александра Космодемьянских, дом 42\",\n            \"UNOM\": 340113,\n            \"entrance\": \"1\",\n            \"floor\": \"8\",\n            \"flat\": \"28\",\n            \"odsNumber\": \"ОДС №1-Коптево\",\n            \"managementCompanyTitle\": \"ООО «МАКС-XXI»\",\n            \"executionCompanyTitle\": \"\",\n            \"renderedServicesIds\": [\n                18248\n            ],\n            \"consumedMaterials\": \"\",\n            \"renderedSecurityServicesIds\": [],\n            \"resultCode\": \"reject\",\n            \"amountOfReturnings\": 0,\n            \"lastReturnedAt\": null,\n            \"isAlarmed\": false,\n            \"closedAt\": \"2020-12-31T23:11:39.385771Z\",\n            \"preferableFrom\": null,\n            \"preferableTo\": null,\n            \"ratedAt\": \"2021-04-15T22:43:28.840557Z\",\n            \"verdict\": \"Работы выполнены\",\n            \"ratingCode\": \"Плохо\",\n            \"gps\": {\n                \"latitude\": 37.528191,\n                \"longitude\": 55.82494\n            },\n            \"isAbnormal\": true,\n            \"anomalyClasses\": {\n                \"bad review\": {\n                    \"verdict\": true\n                }\n            }\n        },\n        {\n            \"rootId\": 73408352,\n            \"versionId\": 73408368,\n            \"number\": \"00000210/21\",\n            \"createdAt\": \"2020-12-31T23:29:17.192133Z\",\n            \"versionStartedAt\": \"2020-12-31T23:31:34.477898Z\",\n            \"isIncident\": false,\n            \"parentRootId\": null,\n            \"userLastEdited\": \"TitovaNI_al\",\n            \"userLastEditedOrganization\": \"Диспетчерская\",\n            \"comment\": \"\",\n            \"categoryId\": 1594,\n            \"defectId\": 2228,\n            \"isDefectReturnable\": false,\n            \"applicantDescription\": \"в кране ГВС нет воды\",\n            \"applicantQuestion\": \"Просьба связаться с заявителем.\",\n            \"emergencyType\": \"normal\",\n            \"region\": \"СВАО\",\n            \"district\": \"Алексеевский\",\n            \"address\": \"Маломосковская улица, дом 29\",\n            \"UNOM\": 15237,\n            \"entrance\": \"1\",\n            \"floor\": \"6\",\n            \"flat\": \"43\",\n            \"odsNumber\": \"ОДС №459-Алексеевский\",\n            \"managementCompanyTitle\": \"ГБУ «ЖИЛИЩНИК АЛЕКСЕЕВСКОГО РАЙОНА»\",\n            \"executionCompanyTitle\": \"Мастерский участок № 3 (Алексеевский)\",\n            \"renderedServicesIds\": [\n                18248\n            ],\n            \"consumedMaterials\": \"\",\n            \"renderedSecurityServicesIds\": [],\n            \"resultCode\": \"reject\",\n            \"amountOfReturnings\": 0,\n            \"lastReturnedAt\": null,\n            \"isAlarmed\": false,\n            \"closedAt\": \"2020-12-31T23:31:34.477898Z\",\n            \"preferableFrom\": null,\n            \"preferableTo\": null,\n            \"ratedAt\": null,\n            \"verdict\": null,\n            \"ratingCode\": null,\n            \"gps\": {\n                \"latitude\": 37.653272,\n                \"longitude\": 55.812336\n            },\n            \"isAbnormal\": true,\n            \"anomalyClasses\": {\n                \"closed without completion for same applicant\": {\n                    \"verdict\": true,\n                    \"description\": \"applicationIds: [73407866]\"\n                }\n            }\n        },\n        {\n            \"rootId\": 73408681,\n            \"versionId\": 73513946,\n            \"number\": \"00000275/21\",\n            \"createdAt\": \"2021-01-01T00:26:13.365071Z\",\n            \"versionStartedAt\": \"2021-01-03T11:50:36.410086Z\",\n            \"isIncident\": false,\n            \"parentRootId\": null,\n            \"userLastEdited\": \"robot_cc\",\n            \"userLastEditedOrganization\": \"Внешняя система\",\n            \"comment\": \"Заявитель на звонки не отвечает;передано в районную Аварийную службу;На момент осмотра, на трубопроводе верхнего розлива Ц/О течи нет; в соединении кровли и внешней стены имеется намокание, Аварийная служба;  будет передано в эксплуатацию на участок для устранения проблемы;Течь капельная временно поставлена емкость-герметизация швов будет проводиться при благоприятных погодных условиях\",\n            \"categoryId\": 50,\n            \"defectId\": 2283,\n            \"isDefectReturnable\": false,\n            \"applicantDescription\": \"в комнате течет по стене, течет с потолка.\",\n            \"applicantQuestion\": \"\",\n            \"emergencyType\": \"emergency\",\n            \"region\": \"ЦАО\",\n            \"district\": \"Басманный\",\n            \"address\": \"Фурманный переулок, дом 5\",\n            \"UNOM\": 27728,\n            \"entrance\": \"1\",\n            \"floor\": \"4\",\n            \"flat\": \"7\",\n            \"odsNumber\": \"ОДС №7-Басманный\",\n            \"managementCompanyTitle\": \"ГБУ «ЖИЛИЩНИК БАСМАННОГО РАЙОНА»\",\n            \"executionCompanyTitle\": \"Мастерский участок № 14 (Басманный)\",\n            \"renderedServicesIds\": [\n                18249\n            ],\n            \"consumedMaterials\": \"\",\n            \"renderedSecurityServicesIds\": [\n                15378\n            ],\n            \"resultCode\": \"consulted\",\n            \"amountOfReturnings\": 0,\n            \"lastReturnedAt\": null,\n            \"isAlarmed\": false,\n            \"closedAt\": \"2021-01-01T09:21:21.280193Z\",\n            \"preferableFrom\": null,\n            \"preferableTo\": null,\n            \"ratedAt\": \"2021-04-15T22:43:28.840557Z\",\n            \"verdict\": \"Работы не выполнены\",\n            \"ratingCode\": \"Плохо\",\n            \"gps\": {\n                \"latitude\": 37.648119,\n                \"longitude\": 55.763853\n            },\n            \"isAbnormal\": true,\n            \"anomalyClasses\": {\n                \"bad review\": {\n                    \"verdict\": true\n                },\n                \"deviation\": {\n                    \"verdict\": true,\n                    \"description\": \"applicationDuration: 8h55m7.915122s, expected: 7h53m39s\"\n                }\n            }\n        },\n        {\n            \"rootId\": 73408735,\n            \"versionId\": 73408740,\n            \"number\": \"00000286/21\",\n            \"createdAt\": \"2021-01-01T00:35:15.57679Z\",\n            \"versionStartedAt\": \"2021-01-01T00:36:32.176071Z\",\n            \"isIncident\": false,\n            \"parentRootId\": null,\n            \"userLastEdited\": \"TitovaNI_al\",\n            \"userLastEditedOrganization\": \"Диспетчерская\",\n            \"comment\": \"\",\n            \"categoryId\": 1594,\n            \"defectId\": 2298,\n            \"isDefectReturnable\": false,\n            \"applicantDescription\": \"Неоднократное обращение. Из крана ГВС течет ХВС, полотенцесушитель холодный\",\n            \"applicantQuestion\": \"\",\n            \"emergencyType\": \"normal\",\n            \"region\": \"СВАО\",\n            \"district\": \"Алексеевский\",\n            \"address\": \"Маломосковская улица, дом 29\",\n            \"UNOM\": 15237,\n            \"entrance\": \"1\",\n            \"floor\": \"6\",\n            \"flat\": \"43\",\n            \"odsNumber\": \"ОДС №459-Алексеевский\",\n            \"managementCompanyTitle\": \"ГБУ «ЖИЛИЩНИК АЛЕКСЕЕВСКОГО РАЙОНА»\",\n            \"executionCompanyTitle\": \"Мастерский участок № 3 (Алексеевский)\",\n            \"renderedServicesIds\": [\n                18248\n            ],\n            \"consumedMaterials\": \"\",\n            \"renderedSecurityServicesIds\": [],\n            \"resultCode\": \"reject\",\n            \"amountOfReturnings\": 0,\n            \"lastReturnedAt\": null,\n            \"isAlarmed\": false,\n            \"closedAt\": \"2021-01-01T00:36:32.176071Z\",\n            \"preferableFrom\": null,\n            \"preferableTo\": null,\n            \"ratedAt\": null,\n            \"verdict\": null,\n            \"ratingCode\": null,\n            \"gps\": {\n                \"latitude\": 37.653272,\n                \"longitude\": 55.812336\n            },\n            \"isAbnormal\": true,\n            \"anomalyClasses\": {\n                \"closed without completion for same applicant\": {\n                    \"verdict\": true,\n                    \"description\": \"applicationIds: [73408563]\"\n                }\n            }\n        },\n        {\n            \"rootId\": 73408792,\n            \"versionId\": 73513939,\n            \"number\": \"00000293/21\",\n            \"createdAt\": \"2021-01-01T00:44:49.266171Z\",\n            \"versionStartedAt\": \"2021-01-03T11:50:34.359271Z\",\n            \"isIncident\": false,\n            \"parentRootId\": null,\n            \"userLastEdited\": \"robot_cc\",\n            \"userLastEditedOrganization\": \"Внешняя система\",\n            \"comment\": \"\",\n            \"categoryId\": 49,\n            \"defectId\": 3392,\n            \"isDefectReturnable\": false,\n            \"applicantDescription\": \"на терртории двора.\",\n            \"applicantQuestion\": \"\",\n            \"emergencyType\": \"normal\",\n            \"region\": \"ЗАО\",\n            \"district\": \"Дорогомилово\",\n            \"address\": \"набережная Тараса Шевченко, дом 5\",\n            \"UNOM\": 29344,\n            \"entrance\": \"1\",\n            \"floor\": null,\n            \"flat\": null,\n            \"odsNumber\": \"ОДС №587-Дорогомилово\",\n            \"managementCompanyTitle\": \"ГБУ «ЖИЛИЩНИК РАЙОНА ДОРОГОМИЛОВО»\",\n            \"executionCompanyTitle\": \"МУ № 6 (Дорогомилово)\",\n            \"renderedServicesIds\": [\n                15040,\n                15615\n            ],\n            \"consumedMaterials\": \"\",\n            \"renderedSecurityServicesIds\": [],\n            \"resultCode\": \"resolved\",\n            \"amountOfReturnings\": 0,\n            \"lastReturnedAt\": null,\n            \"isAlarmed\": false,\n            \"closedAt\": \"2021-01-01T06:53:06.381639Z\",\n            \"preferableFrom\": null,\n            \"preferableTo\": null,\n            \"ratedAt\": \"2021-04-15T22:43:28.840557Z\",\n            \"verdict\": \"Работы не выполнены\",\n            \"ratingCode\": \"Плохо\",\n            \"gps\": {\n                \"latitude\": 37.57056,\n                \"longitude\": 55.749323\n            },\n            \"isAbnormal\": true,\n            \"anomalyClasses\": {\n                \"bad review\": {\n                    \"verdict\": true\n                }\n            }\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "GET Applications Stats AnomalyClasses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/applications/stats/anomalyClasses?region=ВАО",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"applications",
+						"stats",
+						"anomalyClasses"
+					],
+					"query": [
+						{
+							"key": "region",
+							"value": "ВАО"
+						},
+						{
+							"key": "district",
+							"value": "Богородское",
+							"disabled": true
+						},
+						{
+							"key": "anomalyClass[]",
+							"value": "bad review",
+							"disabled": true
+						},
+						{
+							"key": "closedFrom",
+							"value": "RFC3339",
+							"disabled": true
+						},
+						{
+							"key": "closedTo",
+							"value": "RFC3339",
+							"disabled": true
+						},
+						{
+							"key": "categoryId[]",
+							"value": "123",
+							"disabled": true
+						},
+						{
+							"key": "defectId[]",
+							"value": "123",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GET Applications Stats AnomalyClasses",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/applications/stats/anomalyClasses?region=ВАО",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"applications",
+								"stats",
+								"anomalyClasses"
+							],
+							"query": [
+								{
+									"key": "region",
+									"value": "ВАО"
+								},
+								{
+									"key": "district",
+									"value": "Богородское",
+									"disabled": true
+								},
+								{
+									"key": "anomalyClass[]",
+									"value": "bad review",
+									"disabled": true
+								},
+								{
+									"key": "closedFrom",
+									"value": "RFC3339",
+									"disabled": true
+								},
+								{
+									"key": "closedTo",
+									"value": "RFC3339",
+									"disabled": true
+								},
+								{
+									"key": "categoryId[]",
+									"value": "123",
+									"disabled": true
+								},
+								{
+									"key": "defectId[]",
+									"value": "123",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"ВАО\": {\n            \"Богородское\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА БОГОРОДСКОЕ»\": {\n                    \"DudelkINS\": 74,\n                    \"bad review\": 37,\n                    \"closed too fast\": 4,\n                    \"closed with completion but without returnings for same applicant\": 16,\n                    \"closed without completion for same applicant\": 19,\n                    \"deviation\": 60,\n                    \"with returnings\": 3\n                },\n                \"ООО «УК РЕМКОМПЛЕКТСТРОЙ»\": {\n                    \"DudelkINS\": 25,\n                    \"bad review\": 9,\n                    \"closed with completion but without returnings for same applicant\": 9,\n                    \"deviation\": 20\n                },\n                \"ООО «ЭЛИТСТРОЙ»\": {\n                    \"DudelkINS\": 4,\n                    \"bad review\": 3,\n                    \"deviation\": 1\n                }\n            },\n            \"Вешняки\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА ВЕШНЯКИ»\": {\n                    \"DudelkINS\": 49,\n                    \"bad review\": 37,\n                    \"closed too fast\": 2,\n                    \"closed with completion but without returnings for same applicant\": 17,\n                    \"closed without completion for same applicant\": 19,\n                    \"deviation\": 6\n                },\n                \"ЖСК «БУРЕВЕСТНИК-9»\": {\n                    \"bad review\": 1\n                },\n                \"ЖСК «ВЕШНЯКИ-2»\": {\n                    \"DudelkINS\": 1,\n                    \"deviation\": 1\n                },\n                \"ЖСК «ВЕШНЯКИ-5»\": {\n                    \"DudelkINS\": 1,\n                    \"bad review\": 1\n                },\n                \"ЖСК «ДЕВОН»\": {\n                    \"DudelkINS\": 1\n                },\n                \"ЖСК «КВИНТЕТ»\": {\n                    \"DudelkINS\": 1\n                },\n                \"ЖСК «МАРИНА»\": {\n                    \"bad review\": 1\n                },\n                \"ЖСК «МАШПРОЕКТ»\": {\n                    \"closed without completion for same applicant\": 1\n                },\n                \"ООО «УК СТРОЙПРАКТИК»\": {\n                    \"DudelkINS\": 14,\n                    \"bad review\": 14,\n                    \"closed too fast\": 1,\n                    \"closed with completion but without returnings for same applicant\": 6,\n                    \"closed without completion for same applicant\": 11,\n                    \"deviation\": 2\n                }\n            },\n            \"Восточное Измайлово\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА ВОСТОЧНОЕ ИЗМАЙЛОВО»\": {\n                    \"DudelkINS\": 36,\n                    \"bad review\": 34,\n                    \"closed too fast\": 1,\n                    \"closed with completion but without returnings for same applicant\": 17,\n                    \"closed without completion for same applicant\": 9,\n                    \"deviation\": 35,\n                    \"with returnings\": 1\n                },\n                \"ЖСК «ИЗМАЙЛОВО - 1»\": {\n                    \"DudelkINS\": 1\n                },\n                \"ЖСК «УФА»\": {\n                    \"DudelkINS\": 1,\n                    \"bad review\": 1,\n                    \"deviation\": 2\n                },\n                \"ООО «РЭУ-29 РАЙОНА ВОСТОЧНОЕ ИЗМАЙЛОВО»\": {\n                    \"DudelkINS\": 8,\n                    \"bad review\": 7,\n                    \"closed with completion but without returnings for same applicant\": 4,\n                    \"closed without completion for same applicant\": 2,\n                    \"deviation\": 11\n                }\n            },\n            \"Восточный\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА ВОСТОЧНЫЙ»\": {\n                    \"DudelkINS\": 7,\n                    \"bad review\": 6,\n                    \"closed with completion but without returnings for same applicant\": 3,\n                    \"closed without completion for same applicant\": 4\n                },\n                \"ОАО «РЭУ №56 РАЙОНА ВОСТОЧНЫЙ»\": {\n                    \"DudelkINS\": 3,\n                    \"bad review\": 1,\n                    \"closed with completion but without returnings for same applicant\": 1\n                }\n            },\n            \"Гольяново\": {\n                \"АО «УК ГОЛЬЯНОВО»\": {\n                    \"DudelkINS\": 31,\n                    \"bad review\": 24,\n                    \"closed too fast\": 3,\n                    \"closed with completion but without returnings for same applicant\": 8,\n                    \"closed without completion for same applicant\": 18,\n                    \"deviation\": 19\n                },\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА ГОЛЬЯНОВО»\": {\n                    \"DudelkINS\": 148,\n                    \"bad review\": 97,\n                    \"closed for less than 10 minutes with no returnings\": 2,\n                    \"closed too fast\": 7,\n                    \"closed with completion but without returnings for same applicant\": 34,\n                    \"closed without completion for same applicant\": 57,\n                    \"deviation\": 107,\n                    \"with returnings\": 1\n                },\n                \"ЖСК «ГОЛЬЯНОВО-3»\": {\n                    \"deviation\": 1\n                },\n                \"ЖСК «ГОЛЬЯНОВО-6»\": {\n                    \"DudelkINS\": 1,\n                    \"bad review\": 1\n                },\n                \"ЖСК «МАЯК-3»\": {\n                    \"bad review\": 1\n                }\n            },\n            \"Ивановское\": {\n                \"ГБУ «ЖИЛИЩНИК ИВАНОВСКОГО РАЙОНА»\": {\n                    \"DudelkINS\": 63,\n                    \"bad review\": 46,\n                    \"closed too fast\": 1,\n                    \"closed with completion but without returnings for same applicant\": 19,\n                    \"closed without completion for same applicant\": 11,\n                    \"deviation\": 11\n                },\n                \"ЖСК «ЖАВОРОНОК»\": {\n                    \"DudelkINS\": 2,\n                    \"bad review\": 2,\n                    \"closed with completion but without returnings for same applicant\": 1,\n                    \"deviation\": 1\n                },\n                \"ЖСК «ОЗЕРНЫЙ»\": {\n                    \"deviation\": 1\n                },\n                \"ЖСК «ОРЕЛ»\": {\n                    \"DudelkINS\": 1\n                },\n                \"ЖСК «ПЕРОВСКИЙ»\": {\n                    \"DudelkINS\": 1\n                },\n                \"ЖСК «ТУРБИНА»\": {\n                    \"bad review\": 2,\n                    \"closed with completion but without returnings for same applicant\": 1,\n                    \"closed without completion for same applicant\": 1\n                },\n                \"ООО «РЭУ - 40 РАЙОНА «ИВАНОВСКОЕ»\": {\n                    \"DudelkINS\": 12,\n                    \"bad review\": 4,\n                    \"closed with completion but without returnings for same applicant\": 3\n                }\n            },\n            \"Измайлово\": {\n                \"АО «РЭУ №24 РАЙОНА ИЗМАЙЛОВО»\": {\n                    \"DudelkINS\": 31,\n                    \"bad review\": 10,\n                    \"closed too fast\": 2,\n                    \"closed with completion but without returnings for same applicant\": 6,\n                    \"closed without completion for same applicant\": 6,\n                    \"deviation\": 2,\n                    \"with returnings\": 1\n                },\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА ИЗМАЙЛОВО»\": {\n                    \"DudelkINS\": 31,\n                    \"bad review\": 32,\n                    \"closed with completion but without returnings for same applicant\": 7,\n                    \"closed without completion for same applicant\": 19,\n                    \"deviation\": 1\n                },\n                \"ЖСК «ИЗМАЙЛОВО»\": {\n                    \"DudelkINS\": 1\n                },\n                \"ОАО «РЭУ 21 РАЙОНА ИЗМАЙЛОВО»\": {\n                    \"DudelkINS\": 7,\n                    \"bad review\": 9,\n                    \"closed too fast\": 1,\n                    \"closed with completion but without returnings for same applicant\": 2,\n                    \"closed without completion for same applicant\": 1\n                },\n                \"ОАО «РЭУ-22 РАЙОНА ИЗМАЙЛОВО»\": {\n                    \"DudelkINS\": 12,\n                    \"bad review\": 5,\n                    \"closed with completion but without returnings for same applicant\": 1,\n                    \"deviation\": 1\n                }\n            },\n            \"Косино-Ухтомский\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА КОСИНО-УХТОМСКИЙ»\": {\n                    \"DudelkINS\": 38,\n                    \"bad review\": 24,\n                    \"closed too fast\": 1,\n                    \"closed with completion but without returnings for same applicant\": 21,\n                    \"closed without completion for same applicant\": 6,\n                    \"deviation\": 25\n                },\n                \"ООО «УК «ЖИЛФОНД»\": {\n                    \"DudelkINS\": 11,\n                    \"bad review\": 2,\n                    \"closed too fast\": 1,\n                    \"closed with completion but without returnings for same applicant\": 6,\n                    \"closed without completion for same applicant\": 1,\n                    \"deviation\": 5\n                }\n            },\n            \"Метрогородок\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА МЕТРОГОРОДОК»\": {\n                    \"DudelkINS\": 28,\n                    \"bad review\": 18,\n                    \"closed too fast\": 2,\n                    \"closed with completion but without returnings for same applicant\": 14,\n                    \"closed without completion for same applicant\": 4,\n                    \"deviation\": 26\n                },\n                \"ЖСК «АЛМАЗ»\": {\n                    \"DudelkINS\": 1\n                }\n            },\n            \"Новогиреево\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА НОВОГИРЕЕВО»\": {\n                    \"DudelkINS\": 88,\n                    \"bad review\": 52,\n                    \"closed too fast\": 11,\n                    \"closed with completion but without returnings for same applicant\": 31,\n                    \"closed without completion for same applicant\": 40,\n                    \"deviation\": 48,\n                    \"with returnings\": 1\n                },\n                \"Т.С.Ж. «ИНИЦИАТИВА»\": {\n                    \"DudelkINS\": 1\n                }\n            },\n            \"Новокосино\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА НОВОКОСИНО»\": {\n                    \"DudelkINS\": 38,\n                    \"bad review\": 31,\n                    \"closed too fast\": 5,\n                    \"closed with completion but without returnings for same applicant\": 11,\n                    \"closed without completion for same applicant\": 14,\n                    \"deviation\": 5\n                },\n                \"ЖСК «БАЙКОНУР»\": {\n                    \"DudelkINS\": 1\n                },\n                \"ЖСК «НОВОКОСИНО-1»\": {\n                    \"DudelkINS\": 1\n                },\n                \"ЖСК «НОВЫЙ»\": {\n                    \"bad review\": 1\n                },\n                \"ЖСК «ОЗЕРНЫЙ»\": {\n                    \"closed without completion for same applicant\": 1\n                }\n            },\n            \"Перово\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА ПЕРОВО»\": {\n                    \"DudelkINS\": 130,\n                    \"bad review\": 114,\n                    \"closed too fast\": 13,\n                    \"closed with completion but without returnings for same applicant\": 42,\n                    \"closed without completion for same applicant\": 37,\n                    \"deviation\": 63\n                },\n                \"ЖСК «КАМА»\": {\n                    \"DudelkINS\": 1\n                },\n                \"ЖСК «НОВОГИРЕЕВСКИЙ»\": {\n                    \"DudelkINS\": 1,\n                    \"bad review\": 1\n                }\n            },\n            \"Преображенское\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА ПРЕОБРАЖЕНСКОЕ»\": {\n                    \"DudelkINS\": 35,\n                    \"bad review\": 14,\n                    \"closed for less than 10 minutes with no returnings\": 1,\n                    \"closed too fast\": 1,\n                    \"closed with completion but without returnings for same applicant\": 11,\n                    \"closed without completion for same applicant\": 3,\n                    \"deviation\": 13\n                },\n                \"ЖСК «ДРУЖБА-2»\": {\n                    \"bad review\": 1\n                },\n                \"ЖСК «РЕНТГЕН»\": {\n                    \"DudelkINS\": 1\n                },\n                \"ЗАО «МАСТЕР ОК»\": {\n                    \"DudelkINS\": 9,\n                    \"bad review\": 3,\n                    \"deviation\": 5\n                },\n                \"ООО «УК «ПРЕОБРАЖЕНСКОЕ»\": {\n                    \"DudelkINS\": 9,\n                    \"bad review\": 4,\n                    \"closed with completion but without returnings for same applicant\": 2,\n                    \"deviation\": 11\n                }\n            },\n            \"Северное Измайлово\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА СЕВЕРНОЕ ИЗМАЙЛОВО»\": {\n                    \"DudelkINS\": 61,\n                    \"bad review\": 59,\n                    \"closed too fast\": 2,\n                    \"closed with completion but without returnings for same applicant\": 17,\n                    \"closed without completion for same applicant\": 44,\n                    \"deviation\": 42\n                },\n                \"ООО «УК «ЖИЛФОНД»\": {\n                    \"DudelkINS\": 1\n                }\n            },\n            \"Соколиная Гора\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА СОКОЛИНАЯ ГОРА»\": {\n                    \"DudelkINS\": 7,\n                    \"bad review\": 9,\n                    \"closed with completion but without returnings for same applicant\": 7,\n                    \"closed without completion for same applicant\": 20,\n                    \"deviation\": 7\n                },\n                \"ЖСК «ПЕНЗА»\": {\n                    \"DudelkINS\": 2\n                },\n                \"ЖСК «САЛЮТ»\": {\n                    \"closed without completion for same applicant\": 1\n                },\n                \"ОАО «РЭУ-20 Р. «СОКОЛИНАЯ ГОРА»\": {\n                    \"DudelkINS\": 14,\n                    \"bad review\": 8,\n                    \"closed too fast\": 1,\n                    \"closed with completion but without returnings for same applicant\": 3,\n                    \"closed without completion for same applicant\": 3,\n                    \"deviation\": 5\n                },\n                \"ООО «УК М. Р-Н «СОКОЛИНАЯ ГОРА»\": {\n                    \"DudelkINS\": 44,\n                    \"bad review\": 29,\n                    \"closed too fast\": 1,\n                    \"closed with completion but without returnings for same applicant\": 17,\n                    \"closed without completion for same applicant\": 7,\n                    \"deviation\": 55,\n                    \"with returnings\": 1\n                }\n            },\n            \"Сокольники\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА СОКОЛЬНИКИ»\": {\n                    \"DudelkINS\": 46,\n                    \"bad review\": 30,\n                    \"closed too fast\": 19,\n                    \"closed with completion but without returnings for same applicant\": 20,\n                    \"closed without completion for same applicant\": 10,\n                    \"deviation\": 3\n                },\n                \"ООО «АРБАТ-СЕРВИС» УН»\": {\n                    \"DudelkINS\": 1\n                },\n                \"ООО «УК ЖКХ «ИСПОЛИН»\": {\n                    \"DudelkINS\": 3,\n                    \"closed with completion but without returnings for same applicant\": 1\n                },\n                \"ООО «УК ИЗУМРУДНЫЙ ГОРОД»\": {\n                    \"closed too fast\": 1\n                },\n                \"ООО «УК РЭУ-52 РАЙОНА СОКОЛЬНИКИ»\": {\n                    \"DudelkINS\": 2,\n                    \"closed with completion but without returnings for same applicant\": 1,\n                    \"deviation\": 1\n                }\n            }\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "GET Applications Stats AnomalyClassesHour",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/applications/stats/anomalyClassesHour?region=ВАО&district=Богородское&anomalyClass[]=bad review",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"applications",
+						"stats",
+						"anomalyClassesHour"
+					],
+					"query": [
+						{
+							"key": "region",
+							"value": "ВАО"
+						},
+						{
+							"key": "district",
+							"value": "Богородское"
+						},
+						{
+							"key": "anomalyClass[]",
+							"value": "bad review"
+						},
+						{
+							"key": "closedFrom",
+							"value": "RFC3339",
+							"disabled": true
+						},
+						{
+							"key": "closedTo",
+							"value": "RFC3339",
+							"disabled": true
+						},
+						{
+							"key": "categoryId[]",
+							"value": "123",
+							"disabled": true
+						},
+						{
+							"key": "defectId[]",
+							"value": "123",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GET Applications Stats AnomalyClassesHour",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/applications/stats/anomalyClassesHour?region=ВАО&district=Богородское&anomalyClass[]=bad review",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"applications",
+								"stats",
+								"anomalyClassesHour"
+							],
+							"query": [
+								{
+									"key": "region",
+									"value": "ВАО"
+								},
+								{
+									"key": "district",
+									"value": "Богородское"
+								},
+								{
+									"key": "anomalyClass[]",
+									"value": "bad review"
+								},
+								{
+									"key": "closedFrom",
+									"value": "RFC3339",
+									"disabled": true
+								},
+								{
+									"key": "closedTo",
+									"value": "RFC3339",
+									"disabled": true
+								},
+								{
+									"key": "categoryId[]",
+									"value": "123",
+									"disabled": true
+								},
+								{
+									"key": "defectId[]",
+									"value": "123",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"ВАО\": {\n            \"Богородское\": {\n                \"ГБУ «ЖИЛИЩНИК РАЙОНА БОГОРОДСКОЕ»\": {\n                    \"DudelkINS\": {\n                        \"2021-01-01T11:00:00Z\": 1,\n                        \"2021-01-02T15:00:00Z\": 1,\n                        \"2021-01-03T10:00:00Z\": 1,\n                        \"2021-01-04T10:00:00Z\": 1\n                    },\n                    \"bad review\": {\n                        \"2021-01-01T08:00:00Z\": 1,\n                        \"2021-01-01T11:00:00Z\": 2,\n                        \"2021-01-01T12:00:00Z\": 1,\n                        \"2021-01-01T13:00:00Z\": 1,\n                        \"2021-01-01T14:00:00Z\": 2,\n                        \"2021-01-01T16:00:00Z\": 1,\n                        \"2021-01-02T07:00:00Z\": 1,\n                        \"2021-01-02T09:00:00Z\": 1,\n                        \"2021-01-02T15:00:00Z\": 1,\n                        \"2021-01-03T10:00:00Z\": 2,\n                        \"2021-01-03T13:00:00Z\": 1,\n                        \"2021-01-03T14:00:00Z\": 1,\n                        \"2021-01-04T09:00:00Z\": 1,\n                        \"2021-01-04T10:00:00Z\": 2,\n                        \"2021-01-04T17:00:00Z\": 1,\n                        \"2021-01-04T19:00:00Z\": 1,\n                        \"2021-01-05T12:00:00Z\": 2,\n                        \"2021-01-05T15:00:00Z\": 1,\n                        \"2021-01-05T18:00:00Z\": 1,\n                        \"2021-01-06T11:00:00Z\": 2,\n                        \"2021-01-06T13:00:00Z\": 2,\n                        \"2021-01-06T15:00:00Z\": 1,\n                        \"2021-01-07T01:00:00Z\": 1,\n                        \"2021-01-07T10:00:00Z\": 2,\n                        \"2021-01-07T11:00:00Z\": 1,\n                        \"2021-01-07T13:00:00Z\": 2,\n                        \"2021-01-07T16:00:00Z\": 1,\n                        \"2021-01-08T12:00:00Z\": 1,\n                        \"2021-01-08T16:00:00Z\": 1,\n                        \"2021-01-08T17:00:00Z\": 2\n                    }\n                },\n                \"ООО «УК РЕМКОМПЛЕКТСТРОЙ»\": {\n                    \"DudelkINS\": {\n                        \"2021-01-01T07:00:00Z\": 1,\n                        \"2021-01-04T15:00:00Z\": 1\n                    },\n                    \"bad review\": {\n                        \"2021-01-01T07:00:00Z\": 1,\n                        \"2021-01-03T07:00:00Z\": 1,\n                        \"2021-01-03T08:00:00Z\": 1,\n                        \"2021-01-04T10:00:00Z\": 1,\n                        \"2021-01-04T15:00:00Z\": 1,\n                        \"2021-01-06T16:00:00Z\": 1,\n                        \"2021-01-07T07:00:00Z\": 1,\n                        \"2021-01-07T08:00:00Z\": 1,\n                        \"2021-01-07T16:00:00Z\": 1\n                    },\n                    \"closed with completion but without returnings for same applicant\": {\n                        \"2021-01-06T16:00:00Z\": 1\n                    }\n                },\n                \"ООО «ЭЛИТСТРОЙ»\": {\n                    \"bad review\": {\n                        \"2021-01-03T08:00:00Z\": 1,\n                        \"2021-01-04T19:00:00Z\": 1,\n                        \"2021-01-08T12:00:00Z\": 1\n                    }\n                }\n            }\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "GET Applications Stats Normal Abnormal",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/applications/stats/normalAbnormal?region=ЗАО",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"applications",
+						"stats",
+						"normalAbnormal"
+					],
+					"query": [
+						{
+							"key": "region",
+							"value": "ЗАО"
+						},
+						{
+							"key": "district",
+							"value": "Богородское",
+							"disabled": true
+						},
+						{
+							"key": "anomalyClass[]",
+							"value": "bad review",
+							"disabled": true
+						},
+						{
+							"key": "closedFrom",
+							"value": "RFC3339",
+							"disabled": true
+						},
+						{
+							"key": "closedTo",
+							"value": "RFC3339",
+							"disabled": true
+						},
+						{
+							"key": "categoryId[]",
+							"value": "123",
+							"disabled": true
+						},
+						{
+							"key": "defectId[]",
+							"value": "123",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GET Applications Stats Normal Abnormal",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/applications/stats/normalAbnormal?region=ЗАО",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"applications",
+								"stats",
+								"normalAbnormal"
+							],
+							"query": [
+								{
+									"key": "region",
+									"value": "ЗАО"
+								},
+								{
+									"key": "district",
+									"value": "Богородское",
+									"disabled": true
+								},
+								{
+									"key": "anomalyClass[]",
+									"value": "bad review",
+									"disabled": true
+								},
+								{
+									"key": "closedFrom",
+									"value": "RFC3339",
+									"disabled": true
+								},
+								{
+									"key": "closedTo",
+									"value": "RFC3339",
+									"disabled": true
+								},
+								{
+									"key": "categoryId[]",
+									"value": "123",
+									"disabled": true
+								},
+								{
+									"key": "defectId[]",
+									"value": "123",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"ЗАО\": {\n            \"Внуково\": {\n                \"abnormal\": 54,\n                \"normal\": 112\n            },\n            \"Дорогомилово\": {\n                \"abnormal\": 134,\n                \"normal\": 312\n            },\n            \"Крылатское\": {\n                \"abnormal\": 193,\n                \"normal\": 449\n            },\n            \"Кунцево\": {\n                \"abnormal\": 309,\n                \"normal\": 1017\n            },\n            \"Можайский\": {\n                \"abnormal\": 327,\n                \"normal\": 743\n            },\n            \"Ново-Переделкино\": {\n                \"abnormal\": 180,\n                \"normal\": 459\n            },\n            \"Очаково-Матвеевское\": {\n                \"abnormal\": 154,\n                \"normal\": 495\n            },\n            \"Проспект Вернадского\": {\n                \"abnormal\": 146,\n                \"normal\": 305\n            },\n            \"Раменки\": {\n                \"abnormal\": 170,\n                \"normal\": 435\n            },\n            \"Солнцево\": {\n                \"abnormal\": 198,\n                \"normal\": 554\n            },\n            \"Тропарево-Никулино\": {\n                \"abnormal\": 161,\n                \"normal\": 340\n            },\n            \"Филевский Парк\": {\n                \"abnormal\": 201,\n                \"normal\": 559\n            },\n            \"Фили-Давыдково\": {\n                \"abnormal\": 306,\n                \"normal\": 659\n            }\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Applications",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"rowsAmount\": 100000,\n    \"rowsSkip\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/applications",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"applications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/auth",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "hi",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "test",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
