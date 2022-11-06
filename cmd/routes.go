@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/subtle"
+	"net/http"
 	"sync"
 
 	"dudelkins/infrastructure"
@@ -46,6 +47,9 @@ func registerRoutes(router *echo.Echo, injector infrastructure.IInjector) {
 
 	api := router.Group("/api")
 	{
+		api.POST("/auth", func(c echo.Context) error {
+			return c.JSON(http.StatusOK, echo.Map{})
+		})
 		applications := api.Group("/applications")
 		{
 			applications.POST("", applicationController.Create)
