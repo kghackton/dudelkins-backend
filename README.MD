@@ -95,4 +95,5 @@
 
 ## HTTP API Postman Collection
 
-Предлагаем ознакомиться с коллекцией запросов Postman для сервиса: [Postman Collection](api/DUDELKINS.postman_collection.json) 
+Предлагаем ознакомиться с коллекцией запросов Postman для сервиса(скопируйте содерживое в Postman -> Import): [Postman Collection](api/DUDELKINS.postman_collection.json)
+
