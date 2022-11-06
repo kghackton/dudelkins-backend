@@ -17,7 +17,7 @@ type AnomalityService struct {
 	AnomalyCheckers []AnomalyClassCheck
 }
 
-func NewAnomalityService(applicationService interfaces.IApplicationViewService, defectIdsDurationMap map[int]*time.Duration, defectIdsDeviationMap map[string]map[int]time.Duration) *AnomalityService {
+func NewAnomalityService(applicationService interfaces.IApplicationViewService, defectIdsDurationMap map[int]*time.Duration, defectIdsDeviationMap map[string]map[int]time.Duration, insService interfaces.IInsService) *AnomalityService {
 	return &AnomalityService{AnomalyCheckers: []AnomalyClassCheck{
 		NewFastCloseAnomalyCheck(),
 		NewClosedWithoutCompletionCheck(applicationService, defectIdsDurationMap),
@@ -26,6 +26,7 @@ func NewAnomalityService(applicationService interfaces.IApplicationViewService, 
 		NewWithReturningsCheck(),
 		NewClosedForLessThan10MinutesWithNoReturningsCheck(applicationService),
 		NewDeviationCheck(defectIdsDeviationMap),
+		NewDudelkINSCheckCheck(insService),
 	}}
 }
 
@@ -374,6 +375,32 @@ func (c DeviationCheck) CheckApplication(application bo.Application) (isAbnormal
 
 	if applicationDuration > expectedTimeDuration {
 		return true, c.Class, fmt.Sprintf("applicationDuration: %s, expected: %s", applicationDuration, expectedTimeDuration), err
+	}
+
+	return false, c.Class, "", err
+}
+
+type DudelkINSCheck struct {
+	Class string
+
+	InsService interfaces.IInsService
+}
+
+func NewDudelkINSCheckCheck(insService interfaces.IInsService) DudelkINSCheck {
+	return DudelkINSCheck{
+		Class:      "DudelkINS",
+		InsService: insService,
+	}
+}
+
+func (c DudelkINSCheck) CheckApplication(application bo.Application) (isAbnormal bool, class string, description string, err error) {
+	isAbnormal, confidence, err := c.InsService.IsAbnormal(application)
+	if err != nil {
+		return isAbnormal, c.Class, "", errors.Wrap(err, "CheckApplication DudelkINS")
+	}
+
+	if isAbnormal {
+		return isAbnormal, c.Class, fmt.Sprintf("confidence: %f", confidence), err
 	}
 
 	return false, c.Class, "", err

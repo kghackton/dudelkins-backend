@@ -21,6 +21,13 @@ services:
     stop_grace_period: 60s
     restart: unless-stopped
 
+  ins:
+    container_name: anomalius_ins
+    image: registry.gitlab.com/dudelkins/ml
+    networks:
+      - network
+    restart: unless-stopped
+
   postgres:
     container_name: anomalius_pg
     image: postgres:15-alpine

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
@@ -20,7 +19,7 @@ type InsService struct {
 
 func (s *InsService) IsAbnormal(application bo.Application) (isAbnormal bool, confidence float64, err error) {
 	type request struct {
-		IdDefect        string `json:"id_defect"`
+		IdDefect        int    `json:"id_defect"`
 		IdEmergency     string `json:"id_emergency"`
 		IdDoneWorks     []int  `json:"id_done_works"`
 		IdSecurityWorks []int  `json:"id_security_works"`
@@ -28,7 +27,7 @@ func (s *InsService) IsAbnormal(application bo.Application) (isAbnormal bool, co
 	}
 
 	r := request{
-		IdDefect:        strconv.Itoa(application.DefectId),
+		IdDefect:        application.DefectId,
 		IdEmergency:     application.EmergencyType,
 		IdDoneWorks:     application.RenderedServicesIds,
 		IdSecurityWorks: application.RenderedSecurityServicesIds,
