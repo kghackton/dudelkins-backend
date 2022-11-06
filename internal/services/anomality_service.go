@@ -10,6 +10,7 @@ import (
 	"dudelkins/internal/consts"
 	"dudelkins/internal/interfaces"
 	"dudelkins/internal/objects/bo"
+	"dudelkins/pkg/logger"
 	"dudelkins/pkg/utils"
 )
 
@@ -193,6 +194,7 @@ func NewBadReviewCheck() BadReviewCheck {
 
 func (c BadReviewCheck) CheckApplication(application bo.Application) (isAbnormal bool, class string, description string, err error) {
 	if application.RatingCode != nil && *application.RatingCode == consts.BadReviewRatingCode {
+		logger.Debugf("rootId: %d, *application.RatingCode: %+v", application.RootId, *application.RatingCode)
 		return true, c.Class, "", nil
 	}
 

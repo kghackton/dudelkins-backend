@@ -76,7 +76,6 @@ func (c *ApplicationController) Create(ctx echo.Context) (err error) {
 			}
 		}
 
-		workerPool := make(chan struct{}, 6)
 		for i := 0; i < request.RowsAmount; i++ {
 			record, err := csvReader.Read()
 			if err != nil {
@@ -93,17 +92,10 @@ func (c *ApplicationController) Create(ctx echo.Context) (err error) {
 				continue
 			}
 
-			workerPool <- struct{}{}
-			go func(application bo.Application) {
-				defer func() {
-					<-workerPool
-				}()
-
-				if err = c.ApplicationUploadService.Create(context.TODO(), application); err != nil {
-					logger.Errorw(err.Error(), logFields...)
-					return
-				}
-			}(application)
+			if err = c.ApplicationUploadService.Create(context.TODO(), application); err != nil {
+				logger.Errorw(err.Error(), logFields...)
+				return
+			}
 
 			if i%500 == 0 || i == request.RowsAmount-1 {
 				logger.Debugf("%d", i)
