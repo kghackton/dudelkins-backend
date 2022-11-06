@@ -9,6 +9,8 @@ import (
 
 type Environment struct {
 	Postgres
+
+	InsEndpoint string
 }
 
 type Postgres struct {
@@ -40,6 +42,7 @@ func (e *Postgres) FormConnStringPg() string {
 
 func NewEnvironment() (e Environment) {
 	e.Postgres.fillFromEnv()
+	e.InsEndpoint = os.Getenv("INS_ENDPOINT")
 
 	return
 }

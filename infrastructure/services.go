@@ -1,6 +1,9 @@
 package infrastructure
 
 import (
+	"net/http"
+	"time"
+
 	"dudelkins/internal/repositories"
 	"dudelkins/internal/services"
 )
@@ -22,4 +25,15 @@ func (k *Kernel) InjectApplicationViewService() *services.ApplicationViewService
 
 func (k *Kernel) InjectAnomalityService() *services.AnomalityService {
 	return services.NewAnomalityService(k.InjectApplicationViewService(), k.DefectIdsDuration, k.DefectIdsDeviation)
+}
+
+func (k *Kernel) InjectInsService() *services.InsService {
+	httpClient := &http.Client{
+		Timeout: time.Second * 10,
+	}
+
+	return &services.InsService{
+		HttpClient:  httpClient,
+		InsEndPoint: k.env.InsEndpoint,
+	}
 }

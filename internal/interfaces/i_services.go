@@ -20,3 +20,7 @@ type IApplicationViewService interface {
 type IAnomalityService interface {
 	CheckForAnomalies(application bo.Application) (anomalies map[string]bo.AnomalyClass, err error)
 }
+
+type IInsService interface {
+	IsAbnormal(application bo.Application) (isAbnormal bool, confidence float64, err error)
+}
