@@ -35,6 +35,16 @@ func (r *ApplicationRepository) Select(ctx context.Context, bun bun.IDB, queryOp
 	return applications, errors.Wrap(err, "Select")
 }
 
+func (r *ApplicationRepository) SelectSingleWithUnomCoordinates(ctx context.Context, bun bun.IDB, id int) (application dao.Application, err error) {
+	err = bun.NewSelect().
+		Model(&application).
+		Relation("UnomCoordinate").
+		Where("root_id = ?", id).
+		Scan(ctx, &application)
+
+	return application, errors.Wrap(err, "SelectSingleWithUnomCoordinates")
+}
+
 func (r *ApplicationRepository) SelectWithUnomCoordinates(ctx context.Context, bun bun.IDB, queryOpts []bunutils.QueryBuilderFunc, selectOpts []bunutils.SelectOption) (applications dao.Applications, err error) {
 	selectQuery := bun.NewSelect().Model(&applications).
 		Relation("UnomCoordinate")
@@ -48,7 +58,7 @@ func (r *ApplicationRepository) SelectWithUnomCoordinates(ctx context.Context, b
 
 	err = selectQuery.Scan(ctx, &applications)
 
-	return applications, errors.Wrap(err, "Select")
+	return applications, errors.Wrap(err, "SelectWithUnomCoordinates")
 }
 
 func (r *ApplicationRepository) CountAnomalyClasses(ctx context.Context, bunC bun.IDB, queryOpts []bunutils.QueryBuilderFunc) (anomalyClassCounters dao.AnomalyClassCounters, err error) {

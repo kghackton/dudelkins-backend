@@ -168,6 +168,46 @@ func (c *ApplicationController) Get(ctx echo.Context) (err error) {
 	})
 }
 
+func (c *ApplicationController) GetSingle(ctx echo.Context) (err error) {
+	var (
+		logFields = []interface{}{"path", ctx.Path(), "method", ctx.Request().Method}
+		request   struct {
+			RootId int `param:"rootId"`
+		}
+	)
+
+	if err = ctx.Bind(&request); err != nil {
+		logger.Warnw(err.Error(), logFields...)
+		return ctx.JSON(http.StatusBadRequest, echo.Map{
+			"code": http.StatusBadRequest,
+			"msg":  err.Error(),
+		})
+	}
+	if err = ctx.Validate(request); err != nil {
+		logger.Warnw(err.Error(), logFields...)
+		return ctx.JSON(http.StatusBadRequest, echo.Map{
+			"code": http.StatusBadRequest,
+			"msg":  err.Error(),
+		})
+	}
+
+	application, err := c.ApplicationViewService.GetSingle(ctx.Request().Context(), request.RootId)
+	if err != nil {
+		logger.Errorw(err.Error(), logFields...)
+		return ctx.JSON(http.StatusInternalServerError, echo.Map{
+			"code": http.StatusInternalServerError,
+			"msg":  err.Error(),
+		})
+	}
+
+	logger.Infow("", logFields...)
+
+	return ctx.JSON(http.StatusOK, echo.Map{
+		"code": http.StatusOK,
+		"data": application.ToDto(),
+	})
+}
+
 func (c *ApplicationController) GetAnomalyClassesStats(ctx echo.Context) (err error) {
 	var (
 		logFields = []interface{}{"path", ctx.Path(), "method", ctx.Request().Method}

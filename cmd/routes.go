@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/subtle"
 	"sync"
 
 	"dudelkins/infrastructure"
@@ -12,7 +13,14 @@ import (
 
 func initRouter(k *infrastructure.Kernel, port string) (routerStartFunc func(wg *sync.WaitGroup) (err error)) {
 	router := echo.New()
-	router.Use(middleware.Recover())
+	router.Use(middleware.Recover(), middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+		// Be careful to use constant time comparison to prevent timing attacks
+		if subtle.ConstantTimeCompare([]byte(username), []byte("hi")) == 1 &&
+			subtle.ConstantTimeCompare([]byte(password), []byte("test")) == 1 {
+			return true, nil
+		}
+		return false, nil
+	}))
 	router.HTTPErrorHandler = func(err error, c echo.Context) {
 		logger.Errorf("err: %s, request: %+v", err.Error(), c.Request())
 
@@ -42,6 +50,9 @@ func registerRoutes(router *echo.Echo, injector infrastructure.IInjector) {
 		{
 			applications.POST("", applicationController.Create)
 			applications.GET("", applicationController.Get)
+
+			rootId := applications.Group("/:rootId")
+			rootId.GET("", applicationController.GetSingle)
 
 			stats := applications.Group("/stats")
 			{

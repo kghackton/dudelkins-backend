@@ -34,6 +34,24 @@ func (s *ApplicationViewService) Get(ctx context.Context, opts *bo.ApplicationRe
 	return
 }
 
+func (s *ApplicationViewService) GetSingle(ctx context.Context, id int) (application bo.Application, err error) {
+	conn, err := s.Db.AcquireConn(ctx)
+	if err != nil {
+		return application, errors.Wrap(err, "GetSingle")
+	}
+	defer conn.Close()
+
+	applicationDao, err := s.ApplicationRepository.SelectSingleWithUnomCoordinates(ctx, conn, id)
+	if err != nil {
+		return application, errors.Wrap(err, "GetSingle")
+	}
+	if application, err = applicationDao.ToBo(); err != nil {
+		return application, errors.Wrap(err, "GetSingle")
+	}
+
+	return
+}
+
 func (s *ApplicationViewService) CountAnomalyClasses(ctx context.Context, opts *bo.ApplicationRetrieveOpts) (anomalyClassCountersMap bo.AnomalyClassCountersMap, err error) {
 	conn, err := s.Db.AcquireConn(ctx)
 	if err != nil {

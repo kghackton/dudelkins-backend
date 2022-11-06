@@ -12,6 +12,7 @@ import (
 type IApplicationRepository interface {
 	Insert(ctx context.Context, bun bun.IDB, application dao.Application) (err error)
 	Select(ctx context.Context, bun bun.IDB, queryOpts []bunutils.QueryBuilderFunc, selectOpts []bunutils.SelectOption) (applications dao.Applications, err error)
+	SelectSingleWithUnomCoordinates(ctx context.Context, bun bun.IDB, id int) (application dao.Application, err error)
 	SelectWithUnomCoordinates(ctx context.Context, bun bun.IDB, queryOpts []bunutils.QueryBuilderFunc, selectOpts []bunutils.SelectOption) (applications dao.Applications, err error)
 	CountAnomalyClasses(ctx context.Context, bunC bun.IDB, queryOpts []bunutils.QueryBuilderFunc) (anomalyClassCounters dao.AnomalyClassCounters, err error)
 	CountAnomalyClassesByCreationHour(ctx context.Context, bunC bun.IDB, queryOpts []bunutils.QueryBuilderFunc) (anomalyClassCounters dao.AnomalyClassCountersWithCreationHour, err error)
