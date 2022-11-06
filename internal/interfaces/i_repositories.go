@@ -14,5 +14,6 @@ type IApplicationRepository interface {
 	Select(ctx context.Context, bun bun.IDB, queryOpts []bunutils.QueryBuilderFunc, selectOpts []bunutils.SelectOption) (applications dao.Applications, err error)
 	SelectWithUnomCoordinates(ctx context.Context, bun bun.IDB, queryOpts []bunutils.QueryBuilderFunc, selectOpts []bunutils.SelectOption) (applications dao.Applications, err error)
 	CountAnomalyClasses(ctx context.Context, bunC bun.IDB, queryOpts []bunutils.QueryBuilderFunc) (anomalyClassCounters dao.AnomalyClassCounters, err error)
+	CountAnomalyClassesByCreationHour(ctx context.Context, bunC bun.IDB, queryOpts []bunutils.QueryBuilderFunc) (anomalyClassCounters dao.AnomalyClassCountersWithCreationHour, err error)
 	CountNormalAbnormal(ctx context.Context, bunC bun.IDB, queryOpts []bunutils.QueryBuilderFunc) (normalAbnormalCounters dao.NormalAbnormalCounters, err error)
 }

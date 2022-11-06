@@ -96,3 +96,31 @@ func (r *ApplicationRepository) CountNormalAbnormal(ctx context.Context, bunC bu
 
 	return normalAbnormalCounters, errors.Wrap(err, "CountNormalAbnormal")
 }
+
+/*
+WITH grouped_anomaly_class AS (
+    SELECT region, district, management_company_title, jsonb_object_keys(anomaly_classes) as anomaly_class, date_trunc('hour', created_at) creation_hour FROM applications
+)
+SELECT creation_hour, region, district, management_company_title, anomaly_class, count(anomaly_class) FROM grouped_anomaly_class
+GROUP BY creation_hour, region, district, management_company_title, anomaly_class;
+*/
+
+func (r *ApplicationRepository) CountAnomalyClassesByCreationHour(ctx context.Context, bunC bun.IDB, queryOpts []bunutils.QueryBuilderFunc) (anomalyClassCounters dao.AnomalyClassCountersWithCreationHour, err error) {
+	cte := bunC.NewSelect().Table("applications").
+		Column("region", "district", "management_company_title").
+		ColumnExpr("jsonb_object_keys(anomaly_classes) as anomaly_class").
+		ColumnExpr("date_trunc('hour', created_at) as creation_hour")
+	for _, builderFunc := range queryOpts {
+		cte.ApplyQueryBuilder(builderFunc)
+	}
+
+	err = bunC.NewSelect().
+		With("grouped_anomaly_class", cte).
+		Table("grouped_anomaly_class").
+		Column("creation_hour", "region", "district", "management_company_title", "anomaly_class").
+		ColumnExpr("count(anomaly_class) as counter").
+		Group("creation_hour", "region", "district", "management_company_title", "anomaly_class").
+		Scan(ctx, &anomalyClassCounters)
+
+	return anomalyClassCounters, errors.Wrap(err, "CountAnomalyClassesByCreationHour")
+}

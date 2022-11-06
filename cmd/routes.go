@@ -46,6 +46,7 @@ func registerRoutes(router *echo.Echo, injector infrastructure.IInjector) {
 			stats := applications.Group("/stats")
 			{
 				stats.GET("/anomalyClasses", applicationController.GetAnomalyClassesStats)
+				stats.GET("/anomalyClassesHour", applicationController.GetAnomalyClassesWithCreationHourStats)
 				stats.GET("/normalAbnormal", applicationController.GetNormalAbnormalStats)
 			}
 		}

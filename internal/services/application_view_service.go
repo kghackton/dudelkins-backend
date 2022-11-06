@@ -49,6 +49,21 @@ func (s *ApplicationViewService) CountAnomalyClasses(ctx context.Context, opts *
 	return anomalyClassCounters.ToBo().ToMap(), errors.Wrap(err, "CountAnomalyClasses")
 }
 
+func (s *ApplicationViewService) CountAnomalyClassesWithCreationHour(ctx context.Context, opts *bo.ApplicationRetrieveOpts) (anomalyClassCountersWithCreationHourMap bo.AnomalyClassCountersWithCreationHourMap, err error) {
+	conn, err := s.Db.AcquireConn(ctx)
+	if err != nil {
+		return anomalyClassCountersWithCreationHourMap, errors.Wrap(err, "CountAnomalyClassesWithCreationHour")
+	}
+	defer conn.Close()
+
+	anomalyClassCountersWithCreationHour, err := s.ApplicationRepository.CountAnomalyClassesByCreationHour(ctx, conn, opts.QueryBuilderFuncs())
+	if err != nil {
+		return anomalyClassCountersWithCreationHourMap, errors.Wrap(err, "CountAnomalyClassesWithCreationHour")
+	}
+
+	return anomalyClassCountersWithCreationHour.ToBo().ToMap(), errors.Wrap(err, "CountAnomalyClassesWithCreationHour")
+}
+
 func (s *ApplicationViewService) CountNormalAbnormal(ctx context.Context, opts *bo.ApplicationRetrieveOpts) (normalAbnormalCountersMap bo.NormalAbnormalCountersMap, err error) {
 	conn, err := s.Db.AcquireConn(ctx)
 	if err != nil {

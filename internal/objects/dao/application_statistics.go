@@ -41,6 +41,25 @@ type AnomalyClassCounterWithCreationHour struct {
 	AnomalyClassCounter
 }
 
+func (c AnomalyClassCounterWithCreationHour) ToBo() bo.AnomalyClassCounterWithCreationHour {
+	return bo.AnomalyClassCounterWithCreationHour{
+		CreationHour:        c.CreationHour,
+		AnomalyClassCounter: c.AnomalyClassCounter.ToBo(),
+	}
+}
+
+type AnomalyClassCountersWithCreationHour []AnomalyClassCounterWithCreationHour
+
+func (c AnomalyClassCountersWithCreationHour) ToBo() (counters bo.AnomalyClassCountersWithCreationHour) {
+	counters = make(bo.AnomalyClassCountersWithCreationHour, 0, len(c))
+
+	for _, counter := range c {
+		counters = append(counters, counter.ToBo())
+	}
+
+	return
+}
+
 type NormalAbnormalCounter struct {
 	Region          string `bun:"region"`
 	District        string `bun:"district"`
