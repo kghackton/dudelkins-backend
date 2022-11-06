@@ -74,7 +74,7 @@ func (s *ApplicationViewService) CountAnomalyClassesWithCreationHour(ctx context
 	}
 	defer conn.Close()
 
-	anomalyClassCountersWithCreationHour, err := s.ApplicationRepository.CountAnomalyClassesByCreationHour(ctx, conn, opts.QueryBuilderFuncs())
+	anomalyClassCountersWithCreationHour, err := s.ApplicationRepository.CountAnomalyClassesByCreationHour(ctx, conn, opts.QueryBuilderFuncs(), opts.AnomalyClasses)
 	if err != nil {
 		return anomalyClassCountersWithCreationHourMap, errors.Wrap(err, "CountAnomalyClassesWithCreationHour")
 	}
