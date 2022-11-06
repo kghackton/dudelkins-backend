@@ -3,8 +3,9 @@ package infrastructure
 import (
 	"context"
 	"database/sql"
-	"dudelkins/internal/environment"
 	"runtime"
+
+	"dudelkins/internal/environment"
 
 	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
@@ -21,7 +22,7 @@ func initPostgresClient(env environment.Postgres) (*PostgresDatabaseClient, erro
 	dsn := env.FormConnStringPg()
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 
-	maxOpenConns := runtime.NumCPU() * 4
+	maxOpenConns := runtime.NumCPU() * 8
 	sqldb.SetMaxOpenConns(maxOpenConns)
 	sqldb.SetMaxIdleConns(maxOpenConns)
 
