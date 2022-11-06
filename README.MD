@@ -92,3 +92,7 @@
 6. Использование реплик INS MODULE.
 
 ![Component Scaled](doc/component_scheme_scaled.png)
+
+## HTTP API Postman Collection
+
+Предлагаем ознакомиться с коллекцией запросов Postman для сервиса: [Postman Collection](api/DUDELKINS.postman_collection.json) 
