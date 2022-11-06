@@ -59,7 +59,7 @@ func (s *ApplicationViewService) CountAnomalyClasses(ctx context.Context, opts *
 	}
 	defer conn.Close()
 
-	anomalyClassCounters, err := s.ApplicationRepository.CountAnomalyClasses(ctx, conn, opts.QueryBuilderFuncs())
+	anomalyClassCounters, err := s.ApplicationRepository.CountAnomalyClasses(ctx, conn, opts.QueryBuilderFuncs(), opts.AnomalyClasses)
 	if err != nil {
 		return anomalyClassCountersMap, errors.Wrap(err, "CountAnomalyClasses")
 	}

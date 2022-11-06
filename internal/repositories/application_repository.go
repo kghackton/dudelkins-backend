@@ -61,7 +61,7 @@ func (r *ApplicationRepository) SelectWithUnomCoordinates(ctx context.Context, b
 	return applications, errors.Wrap(err, "SelectWithUnomCoordinates")
 }
 
-func (r *ApplicationRepository) CountAnomalyClasses(ctx context.Context, bunC bun.IDB, queryOpts []bunutils.QueryBuilderFunc) (anomalyClassCounters dao.AnomalyClassCounters, err error) {
+func (r *ApplicationRepository) CountAnomalyClasses(ctx context.Context, bunC bun.IDB, queryOpts []bunutils.QueryBuilderFunc, anomalyClasses []string) (anomalyClassCounters dao.AnomalyClassCounters, err error) {
 	cte := bunC.NewSelect().Table("applications").
 		Column("region", "district", "management_company_title").
 		ColumnExpr("jsonb_object_keys(anomaly_classes) as anomaly_class")
@@ -69,13 +69,18 @@ func (r *ApplicationRepository) CountAnomalyClasses(ctx context.Context, bunC bu
 		cte.ApplyQueryBuilder(builderFunc)
 	}
 
-	err = bunC.NewSelect().
+	selectQuery := bunC.NewSelect().
 		With("grouped_anomaly_class", cte).
 		Table("grouped_anomaly_class").
 		Column("region", "district", "management_company_title", "anomaly_class").
 		ColumnExpr("count(anomaly_class) as counter").
-		Group("region", "district", "management_company_title", "anomaly_class").
-		Scan(ctx, &anomalyClassCounters)
+		Group("region", "district", "management_company_title", "anomaly_class")
+
+	if len(anomalyClasses) > 0 {
+		selectQuery.Where("anomaly_class IN (?)", bun.In(anomalyClasses))
+	}
+
+	err = selectQuery.Scan(ctx, &anomalyClassCounters)
 
 	return anomalyClassCounters, errors.Wrap(err, "CountAnomalyClasses")
 }
