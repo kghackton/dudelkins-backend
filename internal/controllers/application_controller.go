@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"encoding/csv"
 	"io"
 	"net/http"
@@ -24,6 +25,7 @@ func (c *ApplicationController) Create(ctx echo.Context) (err error) {
 		logFields = []interface{}{"path", ctx.Path(), "method", ctx.Request().Method}
 		request   struct {
 			RowsAmount int `json:"rowsAmount" validate:"gte=0"`
+			RowsSkip   int `json:"rowsSkip" validate:"gte=0"`
 		}
 	)
 
@@ -42,59 +44,72 @@ func (c *ApplicationController) Create(ctx echo.Context) (err error) {
 		})
 	}
 
-	csvFile, err := os.Open("/data/applications.csv")
-	if err != nil {
-		logger.Errorw(err.Error(), logFields...)
-		return ctx.JSON(http.StatusInternalServerError, echo.Map{
-			"code": http.StatusInternalServerError,
-			"msg":  err.Error(),
-		})
-	}
-	defer csvFile.Close()
-
-	csvReader := csv.NewReader(csvFile)
-	csvReader.Comma = '$'
-	csvReader.ReuseRecord = true
-
 	if request.RowsAmount == 0 {
 		request.RowsAmount = 300
 	}
-	for i := 0; i < request.RowsAmount; i++ {
-		record, err := csvReader.Read()
-		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			logger.Errorw(err.Error(), logFields...)
-			return ctx.JSON(http.StatusInternalServerError, echo.Map{
-				"code": http.StatusInternalServerError,
-				"msg":  err.Error(),
-			})
-		}
-		if i == 0 {
-			continue
-		}
-
-		application, err := bo.NewApplicationFromRecord(record)
-		if err != nil {
-			logger.Errorw(err.Error(), logFields...)
-			return ctx.JSON(http.StatusInternalServerError, echo.Map{
-				"code": http.StatusInternalServerError,
-				"msg":  err.Error(),
-			})
-		}
-		if err = c.ApplicationUploadService.Create(ctx.Request().Context(), application); err != nil {
-			logger.Errorw(err.Error(), logFields...)
-			return ctx.JSON(http.StatusInternalServerError, echo.Map{
-				"code": http.StatusInternalServerError,
-				"msg":  err.Error(),
-			})
-		}
-
-		if i%100 == 0 {
-			logger.Debugf("%d", i)
-		}
+	// to skip csv header
+	if request.RowsSkip == 0 {
+		request.RowsSkip = 1
 	}
+
+	go func() {
+		csvFile, err := os.Open("/data/applications.csv")
+		if err != nil {
+			logger.Errorw(err.Error(), logFields...)
+			return
+		}
+		defer csvFile.Close()
+
+		csvReader := csv.NewReader(csvFile)
+		csvReader.Comma = '$'
+		csvReader.ReuseRecord = true
+
+		for i := 0; i < request.RowsSkip; i++ {
+			_, err := csvReader.Read()
+			if err != nil {
+				if err == io.EOF {
+					logger.Debugf("rowsSkip greater than rows amount in csv")
+					return
+				}
+				logger.Errorw(err.Error(), logFields...)
+				continue
+			}
+		}
+
+		workerPool := make(chan struct{}, 6)
+		for i := 0; i < request.RowsAmount; i++ {
+			record, err := csvReader.Read()
+			if err != nil {
+				if err == io.EOF {
+					break
+				}
+				logger.Errorw(err.Error(), logFields...)
+				continue
+			}
+
+			application, err := bo.NewApplicationFromRecord(record)
+			if err != nil {
+				logger.Errorw(err.Error(), logFields...)
+				continue
+			}
+
+			workerPool <- struct{}{}
+			go func(application bo.Application) {
+				defer func() {
+					<-workerPool
+				}()
+
+				if err = c.ApplicationUploadService.Create(context.TODO(), application); err != nil {
+					logger.Errorw(err.Error(), logFields...)
+					return
+				}
+			}(application)
+
+			if i%500 == 0 || i == request.RowsAmount-1 {
+				logger.Debugf("%d", i)
+			}
+		}
+	}()
 
 	logger.Infow("", logFields...)
 
